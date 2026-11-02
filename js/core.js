@@ -55,7 +55,7 @@ function activate(n,instant){idx=Math.max(0,Math.min(worlds.length-1,n));cur=wor
   worlds.forEach((w,i)=>{const vl=w.el.querySelector('video.vl');if(vl){if(i===idx){const p=vl.play();p&&p.catch&&p.catch(()=>{})}else vl.pause()}});
   lastAct=performance.now()}
 function loop(t){const dt=Math.min((t-last)/1000,.05);last=t;
-  if(scene&&cx){cx.clearRect(0,0,W,H);scene.draw(dt);if(scene.idle&&!$('#gacha').classList.contains('open')&&t-lastAct>3000){scene.idle();lastAct=t-1000}}
+  if(scene&&cx){cx.clearRect(0,0,W,H);scene.draw(dt);if(scene.idle&&!$('#mood').classList.contains('open')&&t-lastAct>3000){scene.idle();lastAct=t-1000}}
   raf=requestAnimationFrame(loop)}
 /* gestures */
 const gest=$('#gest');let g0=null,mode=null;const hint=$('#hint');
@@ -72,7 +72,7 @@ function end(e){if(!g0)return;if(mode==='scrub'){const r=cv.getBoundingClientRec
   g0=null;mode=null}
 gest.addEventListener('pointerup',end);gest.addEventListener('pointercancel',e=>{if(mode==='scrub'){scene&&scene.release&&scene.release(-1,-1);g0=null;mode=null;return}track.classList.remove('drag');activate(idx);g0=null;mode=null});
 let wl=0;addEventListener('wheel',e=>{const n=performance.now();if(n-wl<600||Math.abs(e.deltaY)<20)return;wl=n;activate(idx+(e.deltaY>0?1:-1));hideHint()},{passive:true});
-addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='ArrowDown')activate(idx+1);if(e.key==='ArrowUp')activate(idx-1);if(e.key==='Escape')$('#gacha').classList.remove('open')});
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='ArrowDown')activate(idx+1);if(e.key==='ArrowUp')activate(idx-1);if(e.key==='Escape')closeMood()});
 addEventListener('resize',()=>{if(cur&&!cur.f.locked){fit(cur);}});
 
 /* 반짝이 */

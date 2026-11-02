@@ -154,3 +154,30 @@ body,button,input{font-family:var(--sans)}
 .banner.sync{white-space:pre-line;padding:0 8%;line-height:1.15;word-break:keep-all}
 .world video.vt{opacity:0;transition:opacity 1.6s ease}.world video.vt.on{opacity:1}
 .world .cap{transition:opacity .8s ease}.world.focus .cap{opacity:.12}
+/* 오늘의 축제 처방 (기분 낙서) */
+#mood{position:fixed;inset:0;z-index:30;display:none;overflow:hidden;background:radial-gradient(120% 80% at 50% 0%,#2a1838 0%,#140b1c 55%,#08050c 100%)}
+#mood.open{display:block}
+#mood::before{content:"";position:absolute;inset:0;background-image:radial-gradient(1px 1px at 12% 18%,#fff8 50%,transparent 51%),radial-gradient(1px 1px at 72% 12%,#fff6 50%,transparent 51%),radial-gradient(1.4px 1.4px at 38% 32%,#ffe9b8aa 50%,transparent 51%),radial-gradient(1px 1px at 86% 40%,#fff5 50%,transparent 51%),radial-gradient(1px 1px at 22% 62%,#fff4 50%,transparent 51%),radial-gradient(1.3px 1.3px at 64% 74%,#ffe9b888 50%,transparent 51%),radial-gradient(1px 1px at 90% 86%,#fff5 50%,transparent 51%);pointer-events:none}
+#mcv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+#mood .gx{position:absolute;top:calc(14px + env(safe-area-inset-top));right:14px;z-index:3;font-size:12px;padding:6px 12px;border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.3)}
+.mhead{position:absolute;left:0;right:0;top:30%;text-align:center;pointer-events:none;transition:opacity .6s ease,transform .6s ease}
+#mood.drawn .mhead{opacity:0;transform:translateY(-10px)}
+.mk{font-family:var(--it);font-style:italic;font-size:15px;color:#e9c9ff;opacity:.85;letter-spacing:.02em}
+.mt{font-family:var(--sans);font-size:clamp(24px,7vw,30px);line-height:1.35;margin-top:10px;color:#fff3e2;text-shadow:0 0 24px rgba(255,190,120,.35)}
+.ms{margin-top:14px;font-size:13px;color:#c9b8d6;letter-spacing:.04em}
+#mres{position:absolute;left:0;right:0;bottom:0;padding:0 22px calc(28px + env(safe-area-inset-bottom));text-align:center;opacity:0;transform:translateY(40px);pointer-events:none;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+#mres.on{opacity:1;transform:none;pointer-events:auto}
+#mood.done #mcv{opacity:.55;transition:opacity 1s}
+.mcard{position:relative;margin:0 auto;width:min(78vw,330px);aspect-ratio:3/4;border-radius:22px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.18),0 0 50px color-mix(in srgb,var(--c) 35%,transparent)}
+.mimg{position:absolute;inset:0;background:center 40%/cover}
+.min{position:absolute;left:0;right:0;bottom:0;padding:60px 18px 16px;text-align:left;background:linear-gradient(transparent,rgba(10,6,14,.85))}
+.mlab{font-size:11px;color:#f3e2ff;opacity:.85;letter-spacing:.05em}
+.men{font-family:var(--it);font-style:italic;color:var(--c);font-size:15px;margin-top:6px}
+.mko{font-family:var(--ko);font-size:30px;line-height:1.1;color:#fff}
+.mwhere{font-size:12px;color:#e6d8c3;margin-top:4px}
+#mres .m1{margin-top:16px;font-size:15px;color:#ffe9c8}
+#mres .m2{margin-top:4px;font-size:13px;color:#d7caa9}
+.mbtn{display:flex;gap:10px;justify-content:center;margin-top:16px}
+.mbtn button{padding:11px 22px;border-radius:99px;border:1px solid rgba(255,255,255,.45);font-size:14px;background:rgba(0,0,0,.25)}
+.mbtn .go{background:#fff3e2;color:#2a1420;border-color:#fff3e2;font-weight:600}
+.gbtn i{background:none!important;border:0!important;border-radius:0!important;width:18px;height:12px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 14'%3E%3Cpath d='M2 9c3-7 5-7 6 0s4 4 5-2 4-6 5 0 3 5 4 2' fill='none' stroke='%23fff3e2' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E")!important;background-size:contain!important;background-repeat:no-repeat!important}

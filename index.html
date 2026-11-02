@@ -21,7 +21,7 @@
   <div class="gest" id="gest"></div>
   <div class="ui">
     <span class="mark">FÊTE</span>
-    <div class="right"><div class="dots" id="dots"></div><button class="gbtn" id="gopen"><i></i>뽑기</button></div>
+    <div class="right"><div class="dots" id="dots"></div><button class="gbtn" id="gopen"><i></i>오늘 기분</button></div>
   </div>
   <div class="ticks" id="ticks"></div>
   <div class="hint" id="hint"><div class="ring"></div>눌러보세요<br><span style="opacity:.8;font-size:12px">위로 쓸면 다음 축제</span></div>
@@ -51,22 +51,17 @@
 
 </div>
 
-<section id="gacha" aria-label="오늘의 축제 뽑기">
-  <button class="gx" id="gclose">닫기 ✕</button>
-  <div class="gtitle">오늘의 축제 뽑기</div>
-  <div class="gsub">손잡이를 세 번 돌려요</div>
-  <div class="machine" id="machine">
-    <div class="globe" id="globe"></div>
-    <div class="gbody"><button class="knob" id="knob" aria-label="손잡이 돌리기"><i></i></button><div class="slot"></div></div>
-    <div class="tray"></div>
-  </div>
-  <div class="ghint" id="ghint">손잡이를 눌러요 (0/3)</div>
-  <div id="gres"></div>
+<section id="mood" aria-label="오늘의 축제 처방">
+  <canvas id="mcv"></canvas>
+  <button class="gx" id="mclose">닫기 ✕</button>
+  <div class="mhead"><div class="mk">Today's prescription</div><div class="mt">지금 기분대로<br>아무렇게나 그어보세요</div><div class="ms">세게 · 살살 · 동그랗게 · 위로 · 콕콕 · 꾹</div></div>
+  <div id="mres"><div class="mcard"><div class="mimg"></div><div class="min"><div class="mlab">오늘 당신에게 필요한 축제</div><div class="men"></div><div class="mko"></div><div class="mwhere"></div></div></div>
+    <p class="m1"></p><p class="m2"></p><div class="mbtn"><button class="go" id="mgo">들어가기</button><button id="magain">다시 그리기</button></div></div>
 </section>
 <script src="js/data.js"></script>
 <script src="js/core.js"></script>
 <script src="js/scenes.js"></script>
-<script src="js/gacha.js"></script>
+<script src="js/mood.js"></script>
 <script src="js/lantern.js"></script>
 </body>
 </html>
