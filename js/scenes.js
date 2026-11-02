@@ -59,33 +59,76 @@ SC.lan=()=>{let K,n=0,ok=0,state='ready',glows=[],fl=[],heat=0,holding=false,ful
         cx.globalAlpha=1;cx.restore()}}
     K.drawMsgs(dt)}}};
 
-/* ---------- 죽은 자의 날: 영상 + 게이지 이벤트(영혼의 길) ---------- */
-SC.dead=()=>{let n=0,count=0,state='idle',glows=[],pt=[],sp=[],evT=-1;const NEED=10;
+/* ---------- 죽은 자의 날: 촛불 켜기 → 꽃잎 길 잇기 → 제왕나비(영혼)가 찾아옴 → 칼라베리타 → 영혼의 길 ---------- */
+SC.dead=()=>{let K,n=0,count=0,state='idle',glows=[],pt=[],sp=[],evT=-1,B0='',G0='',dk=null,dg=null,darkA=0,C=[],lit=0,PS=[],pk=0,tT=0,poem=0;const NEED=10;
   const q=sel=>cur.el.querySelector(sel);
-  const bar=v=>{const i=q('.gauge i');if(i)i.style.width=Math.round(v*100)+'%'};
+  const CAND=[[.135,.255],[.235,.195],[.585,.19],[.725,.255],[.22,.355],[.14,.455],[.89,.43]];
+  const PATH=[[.5,.89],[.47,.87],[.42,.82],[.40,.77],[.42,.72],[.50,.68],[.62,.655],[.72,.64]];
   const big=()=>{[0,3,7,10,12,15].forEach((k,i)=>tone(392*Math.pow(2,k/12),i*.2,2.6,.08,'triangle'));noise(1,'highpass',3800,.04)};
-  function fire(){if(state!=='idle')return;const ve=q('video.ve'),bn=q('.banner');if(!ve)return;state='event';
-    try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');big();evT=0;vib([30,40,60]);
-    if(bn){bn.classList.remove('show','sync');void bn.offsetWidth;bn.classList.add('show')}
+  function fire(){if(state!=='idle')return;const ve=q('video.ve');if(!ve)return;state='event';
+    try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');big();evT=0;vib([30,40,60]);K.banner(B0);
     let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);
       const vl=q('video.vl');if(vl){try{vl.currentTime=0}catch(e){}const p2=vl.play();p2&&p2.catch&&p2.catch(()=>{})}
       ve.classList.add('hold');ve.classList.remove('on');tone(293.7,0,2.8,.05,'triangle');tone(440,.3,2.6,.04);
-      setTimeout(()=>{ve.pause();ve.classList.remove('hold');state='idle';count=0;bar(0)},3000)};
-    ve.addEventListener('ended',done);setTimeout(done,8000)}
+      K.later(()=>{ve.pause();ve.classList.remove('hold');state='idle';count=0;K.bar(0)},3000)};
+    ve.addEventListener('ended',done);K.later(done,8000)}
   const spark=(x,y,k)=>{for(let i=0;i<k;i++){const a=R(-2.6,-.55),v=R(60,190)*W/430;sp.push({x,y,vx:Math.cos(a)*v*.6,vy:Math.sin(a)*v,r:R(3,6)*W/430,l:R(1.4,2.6),age:0,ph:R(0,6),pet:Math.random()<.3})}};
+  const motes=(x,y,k,s)=>{for(let i=0;i<k;i++)sp.push({x:x+R(-1,1)*s,y:y+R(-1,1)*s,vx:R(-15,15)*W/430,vy:-R(10,40)*W/430,r:R(2,4)*W/430,l:R(1.2,2.2),age:0,ph:R(0,6),pet:false})};
   const petal=()=>pt.push({x:R(0,W),y:-10,vy:R(22,40),r:R(4,7)*W/430,rot:R(0,6),vr:R(-1.5,1.5),ph:R(0,6)});
-  return{init(){n=0;count=0;state='idle';glows=[];pt=[];sp=[];evT=-1;bar(0)},
-  tap(x,y){glows.push({x,y,t:0});spark(x,y,22);if(state!=='idle')return;count++;n++;bar(count/NEED);meter('밝힌 촛불 '+n);flame();if(count>=NEED)fire()},
+  const hole=(x,y,r,a)=>{const g=dg.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'rgba(0,0,0,'+a+')');g.addColorStop(.55,'rgba(0,0,0,'+(a*.6)+')');g.addColorStop(1,'rgba(0,0,0,0)');dg.globalCompositeOperation='destination-out';dg.fillStyle=g;dg.fillRect(x-r,y-r,r*2,r*2);dg.globalCompositeOperation='source-over'};
+  const focus=on=>cur.el.classList.toggle('focus',on);
+  function startRitual(){state='candles';K.stage(true);focus(true);darkA=0;lit=0;pk=0;
+    dk=document.createElement('canvas');dk.width=Math.ceil(W);dk.height=Math.ceil(H);dg=dk.getContext('2d');dg.fillStyle='rgba(14,6,34,.78)';dg.fillRect(0,0,W,H);
+    C=CAND.map(([fx,fy])=>Object.assign(K.IP(fx,fy),{on:0,ph:R(0,6)}));
+    const pts=PATH.map(([fx,fy])=>K.IP(fx,fy));PS=[];for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1],d=Math.hypot(b.x-a.x,b.y-a.y),m=Math.max(1,Math.ceil(d/5));for(let j=0;j<m;j++)PS.push({x:a.x+(b.x-a.x)*j/m,y:a.y+(b.y-a.y)*j/m})}PS.push(pts[pts.length-1]);
+    K.banner('11월 2일 밤',true);K.label('반짝이는 초를 눌러 하나씩 불을 켜요');K.bar(0);meter('켠 촛불 0/'+C.length);tone(196,0,3,.04,'triangle')}
+  function lightC(c){c.on=1;lit++;hole(c.x,c.y,W*.2,.9);flame();tone(523.25*Math.pow(2,[0,2,4,7,9,12,14][lit-1]/12),0,1.4,.06);motes(c.x,c.y,10,W*.02);vib(10);
+    K.bar(lit/C.length);meter('켠 촛불 '+lit+'/'+C.length);
+    if(lit>=C.length){K.banner('제단이 밝아졌어요',true);K.label('');K.later(()=>{state='path';K.bar(0);K.label('금빛 점을 손가락으로 끌어 꽃잎 길을 제단까지 이어요');tone(392,0,2,.05)},1500)}}
+  function arrive(){state='arrive';tT=0;chime();vib([20,40,20]);K.banner('영혼이 돌아와요',true);K.label('멕시코에선 제왕나비를 돌아온 영혼이라 믿어요');meter('영혼의 길');K.bar(1);
+    K.later(()=>{const vt=q('video.vt');if(vt){try{vt.currentTime=0}catch(e){}const p=vt.play();p&&p.catch&&p.catch(()=>{});vt.classList.add('on');
+      let fin=false;const done=()=>{if(fin)return;fin=true;vt.removeEventListener('ended',done);vt.classList.remove('on');K.later(()=>vt.pause(),1700);showPoem()};vt.addEventListener('ended',done);K.later(done,8000)}else showPoem()},900)}
+  function showPoem(){state='poem';poem=0;K.label('칼라베리타: 죽음을 웃으며 놀리는 짧은 시');[0,4,7,4,0].forEach((k,i)=>tone(523.25*Math.pow(2,k/12),i*.22,.6,.05,'triangle'));
+    K.later(()=>{state='idle';K.stage(false);focus(false);K.label(G0);K.bar(0);count=0;meter('밝힌 촛불 '+n)},7500)}
+  const POEM=['해골 할머니 오셨네','빵 냄새 맡고 오셨네','초 일곱 개 다 켰으니','내년에도 길 잃지 마요'];
+  function drawPoem(){const a=Math.min(1,poem*2)*Math.min(1,Math.max(0,(7.2-poem)*1.5));if(a<=0)return;const w=W*.78,h=W*.62,x=W/2,y=H*.36+(1-Math.min(1,poem*2))*20;
+    cx.save();cx.globalAlpha=a;cx.translate(x,y);cx.rotate(-.025);cx.shadowColor='rgba(0,0,0,.35)';cx.shadowBlur=20;cx.shadowOffsetY=8;cx.fillStyle='#fbf1e2';cx.fillRect(-w/2,-h/2,w,h);cx.shadowColor='transparent';
+    cx.strokeStyle='#e4572e';cx.lineWidth=3;cx.setLineDash([7,6]);cx.strokeRect(-w/2+10,-h/2+10,w-20,h-20);cx.setLineDash([]);
+    cx.textAlign='center';cx.fillStyle='#c2185b';cx.font='400 '+Math.round(W*.034)+'px "Gowun Dodum",sans-serif';cx.fillText('칼라베리타 · Calaverita',0,-h/2+W*.075);
+    cx.fillStyle='#3d2a3f';cx.font='400 '+Math.round(W*.05)+'px "Gowun Dodum",sans-serif';POEM.forEach((l,i)=>{const la=Math.min(1,Math.max(0,(poem-.6-i*.55)*2.5));cx.globalAlpha=a*la;cx.fillText(l,0,-h/2+W*.16+i*W*.1)});
+    cx.restore()}
+  return{init(){K=ritualKit();K.clear();n=0;count=0;glows=[];pt=[];sp=[];evT=-1;const s_=q('.gauge span'),bn=q('.banner');if(s_&&!G0)G0=s_.textContent;if(bn&&!B0)B0=bn.textContent;
+    if(!q('video.vt')&&VID.dead.souls){const x=document.createElement('video');x.className='vt';x.muted=true;x.defaultMuted=true;x.playsInline=true;x.setAttribute('playsinline','');x.setAttribute('muted','');x.preload='auto';
+      VID.dead.souls.forEach(([src,type])=>{const s=document.createElement('source');s.src=src;s.type=type;x.appendChild(s)});q('canvas').before(x)}
+    startRitual()},
+  wants(){return state==='path'},
+  scrub(x,y){if(state!=='path')return;const tol=W*.11;let best=-1;for(let i=pk;i<Math.min(PS.length,pk+14);i++){const p=PS[i];if(Math.hypot(p.x-x,p.y-y)<tol)best=i}
+    if(best>pk){for(let i=pk;i<=best;i+=2)hole(PS[i].x,PS[i].y,W*.13,.55);const h=PS[best];motes(h.x,h.y,2,W*.03);if(Math.random()<.3)tone(659.3+best*3,0,.25,.025);pk=best;K.bar(pk/(PS.length-1));
+      if(pk>=PS.length-1)arrive()}},
+  release(){},
+  tap(x,y){glows.push({x,y,t:0});
+    if(state==='candles'){let bc=null,bd=1e9;C.forEach(c=>{if(c.on)return;const d=Math.hypot(c.x-x,c.y-y);if(d<bd){bd=d;bc=c}});if(bc&&bd<W*.16)lightC(bc);else K.say('반짝이는 초를 눌러요',x,y,'#ffe6b8');return}
+    if(state==='path'){K.label('손가락을 떼지 말고 금빛 점을 끌어요');return}
+    spark(x,y,22);if(state!=='idle')return;count++;n++;K.bar(count/NEED);meter('밝힌 촛불 '+n);flame();if(count>=NEED)fire()},
   draw(dt){const t=performance.now()/1000;
+    if(dk){const target=state==='candles'||state==='path'?1:0;darkA+=(target-darkA)*Math.min(1,dt*(target?2.5:1.2));if(darkA<.003&&target===0&&state!=='candles'){darkA=0;if(state==='idle')dk=null}
+      if(dk&&darkA>0){cx.globalAlpha=darkA;cx.drawImage(dk,0,0,W,H);cx.globalAlpha=1}}
+    if(state==='candles'||state==='path'){C.forEach(c=>{if(c.on){add(cx,'lighter');halo(c.x,c.y,W*.09*(1+.08*Math.sin(t*9+c.ph)),'255,180,90',.35*darkA);add(cx,'source-over')}
+      else if(state==='candles'){const p=.5+.5*Math.sin(t*3+c.ph);cx.strokeStyle='rgba(255,236,190,'+(.35+.4*p)*darkA+')';cx.lineWidth=2;cx.beginPath();cx.arc(c.x,c.y,W*(.035+.012*p),0,7);cx.stroke();add(cx,'lighter');halo(c.x,c.y,W*.035,'255,220,160',.25*p*darkA);add(cx,'source-over')}})}
+    if(state==='path'&&PS.length){const h=PS[Math.min(PS.length-1,pk+3)],p=.5+.5*Math.sin(t*4);add(cx,'lighter');halo(h.x,h.y,W*(.07+.03*p),'255,200,90',.8);halo(h.x,h.y,W*.025,'255,245,210',.9);add(cx,'source-over');
+      const end=PS[PS.length-1];add(cx,'lighter');halo(end.x,end.y,W*.06,'255,170,90',.25+.2*p);add(cx,'source-over')}
+    if(state==='arrive'){tT+=dt;if(tT>1.2&&tT<6.5&&Math.random()<dt*14){const P=K.IP(.42,.19);motes(P.x,P.y,1,W*.1)}const P=K.IP(.42,.19);add(cx,'lighter');halo(P.x,P.y,W*.25,'255,200,120',.25*Math.min(1,tT/1.5));add(cx,'source-over')}
     for(let i=glows.length-1;i>=0;i--){const g=glows[i];g.t+=dt;if(g.t>1.1){glows.splice(i,1);continue}const a=(1-g.t/1.1)**2,r=W*(.08+.14*g.t);add(cx,'lighter');halo(g.x,g.y,r,'255,170,70',.5*a);add(cx,'source-over')}
     if(evT>=0){evT+=dt;if(evT<5.5){const k=Math.max(1,Math.round(dt*140));for(let i=0;i<k;i++)spark(R(0,W),H*R(.55,1.02),1);add(cx,'lighter');halo(W/2,H*.62,W*1.1,'255,160,60',.18*Math.sin(Math.min(1,evT/5.5)*Math.PI));add(cx,'source-over')}else evT=-1}
     for(let i=sp.length-1;i>=0;i--){const p=sp[i];p.age+=dt;if(p.age>p.l){sp.splice(i,1);continue}p.vy+= (p.pet?30:-8)*dt;p.vx*=.985;p.x+=p.vx*dt+Math.sin(t*3+p.ph)*.4;p.y+=p.vy*dt;const a=Math.sin(Math.PI*p.age/p.l);
       if(p.pet){cx.save();cx.globalAlpha=a*.9;cx.translate(p.x,p.y);cx.rotate(t*2+p.ph);cx.fillStyle='#ff9a1f';cx.beginPath();cx.ellipse(0,0,p.r*1.8,p.r*1.1,0,0,7);cx.fill();cx.restore()}
       else{add(cx,'lighter');halo(p.x,p.y,p.r*7,'255,190,100',.7*a);cx.globalAlpha=a;cx.fillStyle='#fff3c4';cx.beginPath();cx.arc(p.x,p.y,p.r*.7,0,7);cx.fill();cx.globalAlpha=1;add(cx,'source-over')}}
+    if(state==='poem'){poem+=dt;drawPoem()}
     if(state==='idle'&&Math.random()<dt*1.2&&pt.length<8)petal();
     const lim=H*.3;
     for(let i=pt.length-1;i>=0;i--){const p=pt[i];p.y+=p.vy*dt;p.x+=Math.sin(t*1.3+p.ph)*.3;p.rot+=p.vr*dt;if(p.y>lim){pt.splice(i,1);continue}
-      cx.save();cx.globalAlpha=Math.min(1,(lim-p.y)/(H*.1))*.9;cx.translate(p.x,p.y);cx.rotate(p.rot);cx.fillStyle='#ff9a1f';cx.beginPath();cx.ellipse(0,0,p.r,p.r*.6,0,0,7);cx.fill();cx.restore()}}}};
+      cx.save();cx.globalAlpha=Math.min(1,(lim-p.y)/(H*.1))*.9;cx.translate(p.x,p.y);cx.rotate(p.rot);cx.fillStyle='#ff9a1f';cx.beginPath();cx.ellipse(0,0,p.r,p.r*.6,0,0,7);cx.fill();cx.restore()}
+    K.drawMsgs(dt)}}};
 
 /* ---------- 라 토마티나: 기름 기둥(팔로 하본) → 폭죽 → 토마토 대전 → 폭죽 → 소방차 청소 ---------- */
 SC.tom=()=>{
@@ -176,7 +219,6 @@ SC.tom=()=>{
     for(let i=msgs.length-1;i>=0;i--){const m=msgs[i];m.age+=dt;if(m.age>1.3){msgs.splice(i,1);continue}const a=Math.min(1,(1.3-m.age)*2.5);cx.globalAlpha=a;cx.font='400 '+Math.round(W*.075)+'px Jua,sans-serif';cx.textAlign='center';cx.lineWidth=6*W/430;cx.strokeStyle='rgba(40,10,5,.8)';cx.strokeText(m.t,m.x,m.y-m.age*40);cx.fillStyle=m.c;cx.fillText(m.t,m.x,m.y-m.age*40);cx.globalAlpha=1}
     if(flash>0){cx.fillStyle='rgba(255,250,230,'+flash*.6+')';cx.fillRect(0,0,W,H);flash=Math.max(0,flash-dt*2.5)}}}};
 
-/* ---------- 버닝맨: 영상 + 게이지 이벤트(맨 태우기) ---------- */
 /* ---------- 버닝맨: 맨을 태우고(환호) → 다음 날 밤 사원에 마음을 적어 걸고 → 말없이 함께 지켜보기 ---------- */
 SC.burn=()=>{let K,n=0,count=0,state='idle',sp=[],evT=-1,G0='',B0='',card=null,ink=null,ig=null,inkLen=0,lastP=null,tT=0,shh=0;const NEED=10;
   const q=sel=>cur.el.querySelector(sel);

@@ -153,3 +153,4 @@ body,button,input{font-family:var(--sans)}
 .world img.stage.on{opacity:1}
 .banner.sync{white-space:pre-line;padding:0 8%;line-height:1.15;word-break:keep-all}
 .world video.vt{opacity:0;transition:opacity 1.6s ease}.world video.vt.on{opacity:1}
+.world .cap{transition:opacity .8s ease}.world.focus .cap{opacity:.12}
