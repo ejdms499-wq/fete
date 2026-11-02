@@ -13,7 +13,7 @@ knob.onclick=()=>{if(pending||cap)return;ac();turns++;knob.style.transform='rota
     setTimeout(()=>{clank();vib([20,30,20]);cap.classList.remove('fall');cap.classList.add('ready');$('#ghint').textContent='캡슐을 눌러서 열어요';cap.onclick=openCap},880)},450)}};
 function openCap(){if(!cap||!pending)return;const f=pending;cap.onclick=null;cap.classList.remove('ready');cap.classList.add('open');pop();vib(30);
   setTimeout(()=>{const r=$('#gres');r.style.setProperty('--c',f.c);const first=!seen[f.id];
-    r.innerHTML='<div class="rc"><img alt="" src="'+IMG[f.id]+'"><div class="in"><div class="en">'+f.en+'</div><h3>'+f.ko+'</h3><div class="mat">'+f.mat+'</div></div></div><div style="margin-top:14px;font-size:13px;color:#d7caa9">'+(first?'처음 만나는 축제예요':'다시 만났어요')+'</div><div class="rbtn"><button class="go" id="rgo">입장하기</button><button id="ragain">한 번 더</button></div>';
+    r.innerHTML='<div class="rc"><img alt="" src="'+((typeof STAGE!=='undefined'&&STAGE[f.id])||IMG[f.id])+'"><div class="in"><div class="en">'+f.en+'</div><h3>'+f.ko+'</h3><div class="mat">'+f.mat+'</div></div></div><div style="margin-top:14px;font-size:13px;color:#d7caa9">'+(first?'처음 만나는 축제예요':'다시 만났어요')+'</div><div class="rbtn"><button class="go" id="rgo">입장하기</button><button id="ragain">한 번 더</button></div>';
     r.classList.add('on');chime();$('#rgo').onclick=()=>{gacha.classList.remove('open');activate(worlds.findIndex(w=>w.f.id===f.id));hideHint()};$('#ragain').onclick=resetG},520)}
 /* boot */
 renderDots();activate(0);last=performance.now();raf=requestAnimationFrame(loop);
