@@ -111,3 +111,13 @@ body,button,input{font-family:var(--sans)}
 .gbtn{background:rgba(255,230,245,.2);backdrop-filter:blur(8px);border-color:rgba(255,255,255,.7)}
 .ghint,.gsub{font-family:var(--sans)}
 @media (prefers-reduced-motion:reduce){.sparkle{animation:none;opacity:.5}}
+
+.world video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;pointer-events:none;background:transparent}
+.world video.ve{opacity:0;transition:opacity 1s ease}
+.world video.ve.on{opacity:1}
+.gauge{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:12px;color:#fff;text-shadow:0 1px 8px #000}
+.gauge b{flex:1;max-width:150px;height:6px;border-radius:99px;background:rgba(255,255,255,.25);overflow:hidden}
+.gauge i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#ffd98a,#ff9a3c);box-shadow:0 0 12px #ffb347;transition:width .25s}
+.banner{position:absolute;left:0;right:0;top:34%;text-align:center;font-family:var(--ko);font-size:clamp(52px,16vw,76px);color:#fff;opacity:0;pointer-events:none;z-index:6;text-shadow:0 0 22px #ffb347,0 0 50px #ff8a30}
+.banner.show{animation:ban 2.8s ease forwards}
+@keyframes ban{0%{opacity:0;transform:scale(.8)}18%{opacity:1;transform:scale(1)}72%{opacity:1}100%{opacity:0;transform:scale(1.06)}}
