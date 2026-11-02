@@ -146,26 +146,69 @@ SC.tom=()=>{
     if(flash>0){cx.fillStyle='rgba(255,250,230,'+flash*.6+')';cx.fillRect(0,0,W,H);flash=Math.max(0,flash-dt*2.5)}}}};
 
 /* ---------- 버닝맨: 영상 + 게이지 이벤트(맨 태우기) ---------- */
-SC.burn=()=>{let n=0,count=0,state='idle',sp=[],evT=-1;const NEED=10;
+/* ---------- 버닝맨: 맨을 태우고(환호) → 다음 날 밤 사원에 마음을 적어 걸고 → 말없이 함께 지켜보기 ---------- */
+SC.burn=()=>{let K,n=0,count=0,state='idle',sp=[],evT=-1,G0='',B0='',card=null,ink=null,ig=null,inkLen=0,lastP=null,tT=0,shh=0;const NEED=10;
   const q=sel=>cur.el.querySelector(sel);
-  const bar=v=>{const i=q('.gauge i');if(i)i.style.width=Math.round(v*100)+'%'};
   const emb=(x,y,k)=>{for(let i=0;i<k;i++){const a=R(-2.7,-.45),v=R(50,170)*W/430;sp.push({x,y,vx:Math.cos(a)*v*.7,vy:Math.sin(a)*v,r:R(2.5,5)*W/430,l:R(1,2.2),age:0,ph:R(0,6),dust:Math.random()<.35})}};
-  function fire(){if(state!=='idle')return;const ve=q('video.ve'),bn=q('.banner');if(!ve)return;state='event';
+  const rise=(x,y,k,spread)=>{for(let i=0;i<k;i++)sp.push({x:x+R(-1,1)*spread,y:y+R(-1,1)*spread*.5,vx:R(-12,12)*W/430,vy:-R(30,80)*W/430,r:R(2,4)*W/430,l:R(1.8,3.4),age:0,ph:R(0,6),dust:false})};
+  function fire(){if(state!=='idle')return;const ve=q('video.ve');if(!ve)return;state='event';
     try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');evT=0;vib([40,40,80]);
-    [0,3,7,10].forEach((k,i)=>tone(196*Math.pow(2,k/12),i*.25,2.6,.07,'triangle'));noise(4,'lowpass',500,.12);
-    if(bn){bn.classList.remove('show','sync');void bn.offsetWidth;bn.classList.add('show')}
+    [0,3,7,10].forEach((k,i)=>tone(196*Math.pow(2,k/12),i*.25,2.6,.07,'triangle'));noise(4,'lowpass',500,.12);noise(2.4,'bandpass',1400,.08);
+    K.banner(B0);
     let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);
       const vl=q('video.vl');if(vl){try{vl.currentTime=0}catch(e){}const p2=vl.play();p2&&p2.catch&&p2.catch(()=>{})}
       ve.classList.add('hold');ve.classList.remove('on');tone(130.8,0,3,.05,'triangle');
-      setTimeout(()=>{ve.pause();ve.classList.remove('hold');state='idle';count=0;bar(0)},3000)};
-    ve.addEventListener('ended',done);setTimeout(done,8000)}
-  return{init(){n=0;count=0;state='idle';sp=[];evT=-1;bar(0)},
-  tap(x,y){emb(x,y,20);noise(.3,'bandpass',600,.15);tone(196,0,.6,.04,'triangle');if(state!=='idle')return;count++;n++;bar(count/NEED);meter('모은 불씨 '+n);if(count>=NEED)fire()},
-  draw(dt){const t=performance.now()/1000;
-    if(evT>=0){evT+=dt;if(evT<5){if(evT>1.5&&Math.random()<dt*14){const e=sp.length;emb(W*R(.35,.65),H*R(.12,.45),3);for(let i=e;i<sp.length;i++)sp[i].dust=false}}else evT=-1}
+      K.later(()=>{ve.pause();ve.classList.remove('hold');toTemple()},3000)};
+    ve.addEventListener('ended',done);K.later(done,8000)}
+  function toTemple(){state='write';K.stage(true);K.banner('다음 날 밤, 사원',true);[0,7,12].forEach((k,i)=>tone(220*Math.pow(2,k/12),i*.5,3,.04));
+    K.label('보내고 싶은 사람에게 손가락으로 한 마디 적어요');K.bar(0);meter('사원');
+    const cw=Math.round(W*.66),ch=Math.round(W*.44);card={x:W/2,y:H*.6,w:cw,h:ch,rot:-.03,s:1,a:0};
+    ink=document.createElement('canvas');ink.width=cw*2;ink.height=ch*2;ig=ink.getContext('2d');ig.scale(2,2);ig.lineCap='round';ig.lineJoin='round';inkLen=0;lastP=null}
+  function local(x,y){const c=card,dx=x-c.x,dy=y-c.y,co=Math.cos(-c.rot),si=Math.sin(-c.rot);return{x:dx*co-dy*si+c.w/2,y:dx*si+dy*co+c.h/2}}
+  function pin(){state='pin';lastP=null;tT=0;chime();vib(20);K.label('사원 벽에 걸었어요');
+    const to=K.IP(.70,.47);card.fx=card.x;card.fy=card.y;card.tx=to.x;card.ty=to.y}
+  function burnTemple(){state='silent';evT=0;shh=0;const vt=q('video.vt');K.label('사원이 탈 때는 모두 말없이 지켜봐요');K.bar(0);meter('고요');
+    if(vt){try{vt.currentTime=0}catch(e){}const p=vt.play();p&&p.catch&&p.catch(()=>{});vt.classList.add('on')}
+    noise(6,'lowpass',380,.05);
+    let fin=false;const done=()=>{if(fin)return;fin=true;vt&&vt.removeEventListener('ended',done);after()};
+    vt&&vt.addEventListener('ended',done);K.later(done,9500)}
+  function after(){state='after';tT=0;K.stage(false);tone(110,0,4,.04,'triangle');tone(164.8,.6,4,.03);
+    K.later(()=>K.banner('마음은 연기가 되어\n하늘로 올라갔어요',true),600);
+    K.later(()=>{const vt=q('video.vt');if(vt){vt.style.transition='opacity 2.4s ease';vt.classList.remove('on');K.later(()=>{vt.pause();vt.style.transition=''},2600)}
+      state='idle';count=0;card=null;K.label(G0);K.bar(0);meter('모은 불씨 '+n)},3400)}
+  function drawCard(){const c=card;if(!c)return;cx.save();cx.globalAlpha=c.a;cx.translate(c.x,c.y);cx.rotate(c.rot);cx.scale(c.s,c.s);
+    cx.shadowColor='rgba(0,0,0,.35)';cx.shadowBlur=18;cx.shadowOffsetY=6;cx.fillStyle='#f6ead4';cx.fillRect(-c.w/2,-c.h/2,c.w,c.h);cx.shadowColor='transparent';
+    cx.strokeStyle='rgba(150,110,80,.18)';cx.lineWidth=1;for(let yy=-c.h/2+c.h*.34;yy<c.h/2-8;yy+=c.h*.17){cx.beginPath();cx.moveTo(-c.w/2+14,yy);cx.lineTo(c.w/2-14,yy);cx.stroke()}
+    cx.fillStyle='rgba(110,70,50,.55)';cx.font='400 '+Math.round(c.w*.07)+'px "Gowun Dodum",sans-serif';cx.textAlign='left';cx.fillText('To.',-c.w/2+14,-c.h/2+c.w*.09);
+    cx.fillStyle='#c0392b';cx.beginPath();cx.arc(0,-c.h/2+6,5,0,7);cx.fill();
+    cx.drawImage(ink,-c.w/2,-c.h/2,c.w,c.h);
+    if(c.burn>0){cx.globalCompositeOperation='source-atop';cx.fillStyle='rgba(255,'+Math.round(150-c.burn*90)+',40,'+(c.burn*.8)+')';cx.fillRect(-c.w/2,-c.h/2,c.w,c.h);cx.globalCompositeOperation='source-over'}
+    cx.restore()}
+  return{init(){K=ritualKit();K.clear();n=0;count=0;state='idle';sp=[];evT=-1;card=null;K.bar(0);
+    const sp_=q('.gauge span'),bn=q('.banner');if(sp_&&!G0)G0=sp_.textContent;if(bn&&!B0)B0=bn.textContent;
+    if(!q('video.vt')&&VID.burn.temple){const x=document.createElement('video');x.className='vt';x.muted=true;x.defaultMuted=true;x.playsInline=true;x.setAttribute('playsinline','');x.setAttribute('muted','');x.preload='auto';
+      VID.burn.temple.forEach(([src,type])=>{const s=document.createElement('source');s.src=src;s.type=type;x.appendChild(s)});q('canvas').before(x)}},
+  wants(){return state==='write'},
+  scrub(x,y,first){if(state!=='write'||!card)return;const p=local(x,y);if(p.x<0||p.y<0||p.x>card.w||p.y>card.h){lastP=null;return}
+    if(first||!lastP){lastP=p;ig.fillStyle='#3b2418';ig.beginPath();ig.arc(p.x,p.y,1.6,0,7);ig.fill();return}
+    const d=Math.hypot(p.x-lastP.x,p.y-lastP.y);if(d<1)return;ig.strokeStyle='#3b2418';ig.lineWidth=3.2*W/430;ig.beginPath();ig.moveTo(lastP.x,lastP.y);ig.lineTo(p.x,p.y);ig.stroke();lastP=p;inkLen+=d;
+    if(Math.random()<.08)noise(.05,'highpass',5000,.03);
+    const v=Math.min(1,inkLen/(W*1.3));K.bar(v);if(v>=1)K.label('다 적었으면 손을 떼요')},
+  release(){lastP=null;if(state==='write'&&inkLen>=W*1.3)K.later(()=>{if(state==='write')pin()},500)},
+  tap(x,y){if(state==='silent'){if(shh<=0){K.say('쉿…',x,y,'#ffe6c8');shh=1.2}return}
+    if(state!=='idle')return;emb(x,y,20);noise(.3,'bandpass',600,.15);tone(196,0,.6,.04,'triangle');count++;n++;K.bar(count/NEED);meter('모은 불씨 '+n);if(count>=NEED)fire()},
+  draw(dt){const t=performance.now()/1000;shh-=dt;
+    if(evT>=0&&state==='event'){evT+=dt;if(evT<5){if(evT>1.5&&Math.random()<dt*14){const e=sp.length;emb(W*R(.35,.65),H*R(.12,.45),3);for(let i=e;i<sp.length;i++)sp[i].dust=false}}else evT=-1}
+    if(card){if(state==='write')card.a=Math.min(1,card.a+dt*2.5);
+      if(state==='pin'){tT+=dt;const k=Math.min(1,tT/1.4),e=1-Math.pow(1-k,3);card.x=card.fx+(card.tx-card.fx)*e;card.y=card.fy+(card.ty-card.fy)*e-Math.sin(k*Math.PI)*H*.06;card.s=1-.8*e;card.rot=-.03+.1*e;if(k>=1&&!card.done){card.done=1;K.later(burnTemple,1600)}}
+      if(state==='silent'){card.burn=Math.min(1,Math.max(0,(evT-1.4)/1.6));if(evT>1.4&&evT<3.4&&Math.random()<dt*20)rise(card.x,card.y,2,card.w*card.s*.4);if(evT>3)card.a=Math.max(0,card.a-dt*1.5);if(card.a<=0)card=null}}
+    if(state==='silent'){evT+=dt;if(evT>2&&Math.random()<dt*6)rise(W*R(.4,.8),H*R(.25,.55),1,W*.05)}
+    if(state==='after'&&Math.random()<dt*10)rise(W*R(.2,.8),H*R(.5,.8),1,W*.05);
+    drawCard();
     for(let i=sp.length-1;i>=0;i--){const p=sp[i];p.age+=dt;if(p.age>p.l){sp.splice(i,1);continue}p.vy+=(p.dust?20:-12)*dt;p.vx*=.98;p.x+=p.vx*dt+Math.sin(t*2.4+p.ph)*.5;p.y+=p.vy*dt;const a=Math.sin(Math.PI*p.age/p.l);
       if(p.dust){cx.globalAlpha=a*.35;cx.fillStyle='#f3d6c0';cx.beginPath();cx.arc(p.x,p.y,p.r*3,0,7);cx.fill();cx.globalAlpha=1}
-      else{add(cx,'lighter');halo(p.x,p.y,p.r*6,'255,140,60',.65*a);cx.globalAlpha=a;cx.fillStyle='#ffe2a8';cx.beginPath();cx.arc(p.x,p.y,p.r*.6,0,7);cx.fill();cx.globalAlpha=1;add(cx,'source-over')}}}}};
+      else{add(cx,'lighter');halo(p.x,p.y,p.r*6,'255,140,60',.65*a);cx.globalAlpha=a;cx.fillStyle='#ffe2a8';cx.beginPath();cx.arc(p.x,p.y,p.r*.6,0,7);cx.fill();cx.globalAlpha=1;add(cx,'source-over')}}
+    K.drawMsgs(dt)}}};
 
 /* ---------- 공통: 의식 단계 도우미 ---------- */
 const ritualKit=()=>{const q=sel=>cur.el.querySelector(sel);const tm=[];

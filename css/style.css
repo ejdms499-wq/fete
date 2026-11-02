@@ -152,3 +152,4 @@ body,button,input{font-family:var(--sans)}
 .world img.stage{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;opacity:0;transition:opacity 1.2s ease;pointer-events:none;will-change:transform}
 .world img.stage.on{opacity:1}
 .banner.sync{white-space:pre-line;padding:0 8%;line-height:1.15;word-break:keep-all}
+.world video.vt{opacity:0;transition:opacity 1.6s ease}.world video.vt.on{opacity:1}

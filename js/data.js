@@ -7,7 +7,8 @@ const VID={song:{
   event:[['video/songkran-event.mp4','video/mp4'],['video/songkran-event.webm','video/webm']]},
 burn:{
   loop:[['video/burning-man-loop.mp4','video/mp4'],['video/burning-man-loop.webm','video/webm']],
-  event:[['video/burning-man-event.mp4','video/mp4'],['video/burning-man-event.webm','video/webm']]},
+  event:[['video/burning-man-event.mp4','video/mp4'],['video/burning-man-event.webm','video/webm']],
+  temple:[['video/burning-man-temple.mp4','video/mp4'],['video/burning-man-temple.webm','video/webm']]},
 holi:{
   loop:[['video/holi-loop.mp4','video/mp4'],['video/holi-loop.webm','video/webm']],
   event:[['video/holi-event.mp4','video/mp4'],['video/holi-event.webm','video/webm']]},
@@ -22,4 +23,4 @@ lan:{
   event:[['video/yi-peng-event.mp4','video/mp4'],['video/yi-peng-event.webm','video/webm']]}};
 
 /* 의식 단계 이미지 */
-const STAGE={tom:'img/la-tomatina-pole.jpg',song:'img/songkran-ritual.jpg',holi:'img/holi-night.jpg'};
+const STAGE={tom:'img/la-tomatina-pole.jpg',song:'img/songkran-ritual.jpg',holi:'img/holi-night.jpg',burn:'img/burning-man-temple.jpg'};
