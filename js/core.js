@@ -44,7 +44,7 @@ FEST.forEach((f,i)=>{const el=document.createElement('div');el.className='world'
   if(f.locked){el.innerHTML='<div class="big">'+f.ko+'</div><div class="cap"><div class="en">'+f.en+'</div><h2>'+f.ko+'</h2><div class="mat"><b>재료</b>'+f.mat+'</div><div class="soon">곧 열려요 · '+f.where+'</div></div>'}
   else{el.innerHTML='<img class="bg" alt="" src="'+IMG[f.id]+'"><canvas></canvas><div class="cap"><div class="en">'+f.en+'<span class="dday">'+realLabel(f.id)+'</span></div><div class="row"><h2>'+f.ko+'</h2><div class="meter"></div></div><div class="mat"><b>재료</b>'+f.mat+' · '+f.where+'</div><div class="fact">'+f.fact+'</div></div>';w.cv=el.querySelector('canvas');w.met=el.querySelector('.meter')}
   if(!f.locked&&VID[f.id]){const v=VID[f.id];
-    const mk=(cls,files)=>{const x=document.createElement('video');x.className=cls;x.muted=true;x.defaultMuted=true;x.playsInline=true;x.setAttribute('playsinline','');x.setAttribute('muted','');x.preload='auto';if(cls==='vl')x.loop=true;files.forEach(([src,type])=>{const s=document.createElement('source');s.src=src;s.type=type;x.appendChild(s)});return x};
+    const mk=(cls,files)=>{const x=document.createElement('video');x.className=cls;x.muted=true;x.defaultMuted=true;x.playsInline=true;x.setAttribute('playsinline','');x.setAttribute('muted','');x.preload='none';if(cls==='vl')x.loop=true;files.forEach(([src,type])=>{const s=document.createElement('source');s.src=src;s.type=type;x.appendChild(s)});return x};
     const vl=mk('vl',v.loop);const im=el.querySelector('img.bg');im.after(vl);if(v.event){const ve=mk('ve',v.event);vl.after(ve)}if(STAGE[f.id]){const sg=document.createElement('img');sg.className='stage';sg.alt='';sg.src=STAGE[f.id];el.querySelector('canvas').before(sg)}
     if(v.event)el.querySelector('.cap').insertAdjacentHTML('afterbegin','<div class="gauge"><span>'+(f.gauge||'눌러서 모아요')+'</span><b><i></i></b></div>');
     el.insertAdjacentHTML('beforeend','<div class="banner">'+(f.banner||'대점등')+'</div>')}
@@ -60,7 +60,8 @@ function activate(n,instant){castClear();idx=Math.max(0,Math.min(worlds.length-1
   else{$('#blur').style.backgroundImage='none'}
   worlds.forEach((w,i)=>{if(w.cv&&i!==idx){w.cv.getContext('2d').clearRect(0,0,w.cv.width,w.cv.height)}});
   window.onWorld&&window.onWorld(cur.f.id);
-  worlds.forEach((w,i)=>{const vl=w.el.querySelector('video.vl');if(vl){if(i===idx){const p=vl.play();p&&p.catch&&p.catch(()=>{})}else vl.pause()}});
+  worlds.forEach((w,i)=>{const near=Math.abs(i-idx)<=1;w.el.querySelectorAll('video').forEach(v=>{if(near&&v.preload!=='auto'){v.preload='auto';try{v.load()}catch(e){}}if(i!==idx)v.pause()});
+    const vl=w.el.querySelector('video.vl');if(vl&&i===idx){const p=vl.play();p&&p.catch&&p.catch(()=>{})}});
   lastAct=performance.now()}
 function loop(t){const dt=Math.min((t-last)/1000,.05);last=t;
   if(scene&&cx){cx.clearRect(0,0,W,H);scene.draw(dt);if(scene.idle&&!$('#mood').classList.contains('open')&&t-lastAct>3000){scene.idle();lastAct=t-1000}}

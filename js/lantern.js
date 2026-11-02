@@ -1,23 +1,9 @@
 /* 이펭: 매일 밤 9시 함께 점등 · 폰 움직임 · 친구에게 등불 보내기 */
 (function(){
-const EVT_HOUR_UTC=12;          /* 한국 시간 21:00 */
-const EVT_SEC=7.4;               /* 이벤트 영상 길이 */
 const $$=s=>document.querySelector(s);
-const nowMs=()=>Date.now()+(window.FETE_OFFSET||0);
-function evtInfo(now){const d=new Date(now);let t=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),EVT_HOUR_UTC,0,0);
-  if(now<t)return{next:t,active:false};
-  if(now<t+EVT_SEC*1000)return{next:t,active:true,offset:(now-t)/1000};
-  return{next:t+86400000,active:false}}
-const p2=n=>String(n).padStart(2,'0');
-function fmt(ms){const s=Math.max(0,Math.floor(ms/1000));return p2(Math.floor(s/3600))+':'+p2(Math.floor(s%3600/60))+':'+p2(s%60)}
-let onLan=false,lastFired=0;
-function tick(){if(!onLan)return;const now=nowMs(),e=evtInfo(now),cd=$$('#cd');
-  if(e.active){cd.textContent='지금 대점등!';
-    if(lastFired!==e.next&&window.lanApi&&!lanApi.busy()&&!$$('#gacha').classList.contains('open')){if(lanApi.fire(e.offset,true))lastFired=e.next}}
-  else cd.textContent=fmt(e.next-now)+' 뒤'}
-setInterval(tick,250);
+let onLan=false;
 /* 토스트 */
-let tt=0;function toast(t){const el=$$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),3600)}
+let tt=0;window.toast=function(t){const el=$$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('on'),3600)};const toast=window.toast;
 /* 폰 움직임 */
 let motionOn=false,lastMove=0;
 function onMotion(e){if(!onLan||!window.lanApi||lanApi.busy())return;const a=e.acceleration;if(!a||a.x==null)return;
@@ -30,7 +16,7 @@ if(typeof DeviceMotionEvent!=='undefined'){
   if(ios&&typeof DeviceMotionEvent.requestPermission==='function'){mb.hidden=false;mb.onclick=async()=>{try{const r=await DeviceMotionEvent.requestPermission();if(r==='granted'){startMotion();mb.hidden=true;toast('이제 폰을 흔들거나 들어올려 보세요')}else toast('움직임이 허용되지 않았어요')}catch(e){toast('이 폰에서는 움직임을 쓸 수 없어요')}}}
   else startMotion()}
 /* 월드 전환 */
-window.onWorld=function(id){onLan=(id==='lan');$$('#lanUI').hidden=!onLan;tick()};
+window.onWorld=function(id){onLan=(id==='lan');$$('#lanUI').hidden=!onLan};
 /* 링크 */
 const enc=o=>{const b=new TextEncoder().encode(JSON.stringify(o));let s='';b.forEach(x=>s+=String.fromCharCode(x));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
 const dec=t=>{try{const s=atob(t.replace(/-/g,'+').replace(/_/g,'/'));const b=Uint8Array.from(s,c=>c.charCodeAt(0));const o=JSON.parse(new TextDecoder().decode(b));return{n:String(o.n||'').slice(0,10),m:String(o.m||'').slice(0,20)}}catch(e){return null}};
