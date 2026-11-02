@@ -4,8 +4,8 @@ const FEST=[
  {id:'lan',ko:'이펭 등불축제',en:'Yi Peng',where:'태국 치앙마이',mat:'종이와 나무, 안에서 나오는 불빛',c:'#ffb347',fact:'등불에 걱정과 불운을 담아 하늘로 보낸다고 믿어요.',ph:'소원을 적어보세요',btn:'띄우기',unit:'모은 등불',gauge:'누르거나 폰을 흔들어 모아요',banner:'대점등'},
  {id:'dead',ko:'죽은 자의 날',en:'Día de Muertos',where:'멕시코',mat:'설탕 반죽과 진짜 금잔화',c:'#ff9a1f',fact:'금잔화 꽃길이 영혼이 집을 찾아오는 길이 된다고 믿어요.',ph:'기억하고 싶은 이름',btn:'켜기',unit:'밝힌 촛불',gauge:'눌러서 촛불을 밝혀요',banner:'영혼의 길'},
  {id:'tom',ko:'라 토마티나',en:'La Tomatina',where:'스페인 부뇰',mat:'방울토마토 인물과 소금빛 건물',c:'#ff4a36',fact:'트럭 여러 대분의 토마토가 풀리고, 약 한 시간 던진 뒤 소방차가 거리를 씻어내요.',unit:'던진 토마토',gauge:'눌러서 토마토를 던져요',banner:'토마토 대전!'},
- {id:'burn',ko:'버닝맨',en:'Burning Man',where:'미국 네바다 사막',mat:'골판지와 철사',c:'#ff7a3d',locked:1},
- {id:'holi',ko:'홀리',en:'Holi',where:'인도 · 네팔',mat:'색분필 가루',c:'#ff48b0',locked:1},
+ {id:'burn',ko:'버닝맨',en:'Burning Man',where:'미국 네바다 사막',mat:'골판지와 철사',c:'#ff7a3d',fact:'사막에 일주일 동안만 생기는 도시예요. 돈 대신 선물을 주고받고, 마지막 밤에 나무 인형 맨을 태워요.',unit:'모은 불씨'},
+ {id:'holi',ko:'홀리',en:'Holi',where:'인도 · 네팔',mat:'색분필 가루',c:'#ff48b0',fact:'봄이 온 걸 축하하며 서로에게 색 가루를 던져요. 이날만큼은 누구에게 가루를 묻혀도 괜찮아요.',unit:'던진 가루',gauge:'눌러서 색 가루를 던져요',banner:'색의 폭발'},
  {id:'song',ko:'송끄란',en:'Songkran',where:'태국',mat:'유리와 물방울',c:'#3ec9ff',locked:1}
 ];
 const OPEN=FEST.filter(f=>!f.locked);
@@ -37,8 +37,8 @@ FEST.forEach((f,i)=>{const el=document.createElement('div');el.className='world'
   else{el.innerHTML='<img class="bg" alt="" src="'+IMG[f.id]+'"><canvas></canvas><div class="cap"><div class="en">'+f.en+'</div><div class="row"><h2>'+f.ko+'</h2><div class="meter"></div></div><div class="mat"><b>재료</b>'+f.mat+' · '+f.where+'</div><div class="fact">'+f.fact+'</div></div>';w.cv=el.querySelector('canvas');w.met=el.querySelector('.meter')}
   if(!f.locked&&VID[f.id]){const v=VID[f.id];
     const mk=(cls,files)=>{const x=document.createElement('video');x.className=cls;x.muted=true;x.defaultMuted=true;x.playsInline=true;x.setAttribute('playsinline','');x.setAttribute('muted','');x.preload='auto';if(cls==='vl')x.loop=true;files.forEach(([src,type])=>{const s=document.createElement('source');s.src=src;s.type=type;x.appendChild(s)});return x};
-    const vl=mk('vl',v.loop),ve=mk('ve',v.event);const im=el.querySelector('img.bg');im.after(vl);vl.after(ve);
-    el.querySelector('.cap').insertAdjacentHTML('afterbegin','<div class="gauge"><span>'+(f.gauge||'눌러서 모아요')+'</span><b><i></i></b></div>');
+    const vl=mk('vl',v.loop);const im=el.querySelector('img.bg');im.after(vl);if(v.event){const ve=mk('ve',v.event);vl.after(ve)}
+    if(v.event)el.querySelector('.cap').insertAdjacentHTML('afterbegin','<div class="gauge"><span>'+(f.gauge||'눌러서 모아요')+'</span><b><i></i></b></div>');
     el.insertAdjacentHTML('beforeend','<div class="banner">'+(f.banner||'대점등')+'</div>')}
   track.appendChild(el);worlds.push(w);const t=document.createElement('div');t.className='tick';$('#ticks').appendChild(t)});
 function fit(w){if(!w.cv)return;const r=w.cv.getBoundingClientRect();D=Math.min(devicePixelRatio||1,2);W=Math.max(10,r.width);H=Math.max(10,r.height);w.cv.width=Math.ceil(W*D);w.cv.height=Math.ceil(H*D);cx=w.cv.getContext('2d');cx.setTransform(D,0,0,D,0,0)}

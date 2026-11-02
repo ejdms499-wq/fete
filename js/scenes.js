@@ -99,3 +99,36 @@ SC.tom=()=>{let n=0,count=0,state='idle',drops=[],spl=[],dirt=null,dx=null,water
       cx.globalAlpha=1}
     for(let i=drops.length-1;i>=0;i--){const d=drops[i];d.age+=dt;if(d.age>d.l){drops.splice(i,1);continue}d.vy+=1100*dt*W/430;d.x+=d.vx*dt;d.y+=d.vy*dt;
       cx.globalAlpha=Math.min(1,(d.l-d.age)*4);cx.fillStyle=d.seed>.8?'#ffb24a':'#e2321e';cx.beginPath();cx.arc(d.x,d.y,d.r,0,7);cx.fill();cx.globalAlpha=1}}}};
+
+/* ---------- 버닝맨: 영상 반복 + 누르면 불씨와 먼지 (불태우기 이벤트는 영상 준비 중) ---------- */
+SC.burn=()=>{let n=0,sp=[];
+  const emb=(x,y,k)=>{for(let i=0;i<k;i++){const a=R(-2.7,-.45),v=R(50,170)*W/430;sp.push({x,y,vx:Math.cos(a)*v*.7,vy:Math.sin(a)*v,r:R(2.5,5)*W/430,l:R(1,2.2),age:0,ph:R(0,6),dust:Math.random()<.35})}};
+  return{init(){n=0;sp=[]},
+  tap(x,y){emb(x,y,20);n++;meter('모은 불씨 '+n);noise(.3,'bandpass',600,.15);tone(196,0,.6,.04,'triangle')},
+  draw(dt){const t=performance.now()/1000;
+    for(let i=sp.length-1;i>=0;i--){const p=sp[i];p.age+=dt;if(p.age>p.l){sp.splice(i,1);continue}p.vy+=(p.dust?20:-12)*dt;p.vx*=.98;p.x+=p.vx*dt+Math.sin(t*2.4+p.ph)*.5;p.y+=p.vy*dt;const a=Math.sin(Math.PI*p.age/p.l);
+      if(p.dust){cx.globalAlpha=a*.35;cx.fillStyle='#f3d6c0';cx.beginPath();cx.arc(p.x,p.y,p.r*3,0,7);cx.fill();cx.globalAlpha=1}
+      else{add(cx,'lighter');halo(p.x,p.y,p.r*6,'255,140,60',.65*a);cx.globalAlpha=a;cx.fillStyle='#ffe2a8';cx.beginPath();cx.arc(p.x,p.y,p.r*.6,0,7);cx.fill();cx.globalAlpha=1;add(cx,'source-over')}}}}};
+
+/* ---------- 홀리: 영상 + 게이지 이벤트(색의 폭발) ---------- */
+SC.holi=()=>{let n=0,count=0,state='idle',puffs=[],evT=-1;const NEED=10;
+  const COL=['255,72,176','255,206,40','40,200,230','120,220,90','255,130,40','170,110,255'];
+  const q=sel=>cur.el.querySelector(sel);
+  const bar=v=>{const i=q('.gauge i');if(i)i.style.width=Math.round(v*100)+'%'};
+  const puff=(x,y,big)=>{const c=COL[Math.floor(R(0,COL.length))];const k=big?10:7;for(let i=0;i<k;i++){const a=R(0,6.283),v=R(30,big?260:150)*W/430;puffs.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-40*W/430,r:R(14,big?46:30)*W/430,c,age:0,l:R(1.2,2.2)})}
+    for(let i=0;i<14;i++){const a=R(0,6.283),v=R(80,300)*W/430;puffs.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-60*W/430,r:R(1.5,3)*W/430,c,age:0,l:R(.6,1.2),dot:1})}};
+  function fire(){if(state!=='idle')return;const ve=q('video.ve'),bn=q('.banner');if(!ve)return;state='event';
+    try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');evT=0;vib([30,30,30,30,60]);
+    [0,4,7,11,14].forEach((k,i)=>tone(440*Math.pow(2,k/12),i*.1,1.4,.08));noise(.8,'bandpass',1200,.25);
+    if(bn){bn.classList.remove('show','sync');void bn.offsetWidth;bn.classList.add('show')}
+    let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);
+      const vl=q('video.vl');if(vl){try{vl.currentTime=0}catch(e){}const p2=vl.play();p2&&p2.catch&&p2.catch(()=>{})}
+      ve.classList.add('hold');ve.classList.remove('on');tone(523.25,0,2.4,.05);
+      setTimeout(()=>{ve.pause();ve.classList.remove('hold');state='idle';count=0;bar(0)},3000)};
+    ve.addEventListener('ended',done);setTimeout(done,8000)}
+  return{init(){n=0;count=0;state='idle';puffs=[];evT=-1;bar(0)},
+  tap(x,y){puff(x,y,false);noise(.35,'bandpass',900,.25);if(state!=='idle')return;count++;n++;bar(count/NEED);meter('던진 가루 '+n);if(count>=NEED)fire()},
+  draw(dt){if(evT>=0){evT+=dt;if(evT<4.5){if(Math.random()<dt*5)puff(R(0,W),R(H*.1,H*.6),true)}else evT=-1}
+    for(let i=puffs.length-1;i>=0;i--){const p=puffs[i];p.age+=dt;if(p.age>p.l){puffs.splice(i,1);continue}p.vx*=.95;p.vy=p.vy*.95+(p.dot?260:14)*dt*W/430;p.x+=p.vx*dt;p.y+=p.vy*dt;const k=p.age/p.l,a=(1-k)*(p.dot?1:.55);
+      if(p.dot){cx.globalAlpha=a;cx.fillStyle='rgb('+p.c+')';cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill();cx.globalAlpha=1}
+      else{const r=p.r*(1+k*1.4);const g=cx.createRadialGradient(p.x,p.y,0,p.x,p.y,r);g.addColorStop(0,'rgba('+p.c+','+a+')');g.addColorStop(.6,'rgba('+p.c+','+a*.5+')');g.addColorStop(1,'rgba('+p.c+',0)');cx.fillStyle=g;cx.fillRect(p.x-r,p.y-r,r*2,r*2)}}}}};
