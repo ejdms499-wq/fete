@@ -2,7 +2,10 @@
 const IMG={lan:'img/yi-peng.jpg',dead:'img/dia-de-muertos.jpg',tom:'img/la-tomatina.jpg'};
 
 /* 축제 영상: 평소(반복) / 이벤트(게이지가 차면) */
-const VID={dead:{
+const VID={tom:{
+  loop:[['video/la-tomatina-loop.mp4','video/mp4'],['video/la-tomatina-loop.webm','video/webm']],
+  event:[['video/la-tomatina-event.mp4','video/mp4'],['video/la-tomatina-event.webm','video/webm']]},
+dead:{
   loop:[['video/dia-de-muertos-loop.mp4','video/mp4'],['video/dia-de-muertos-loop.webm','video/webm']],
   event:[['video/dia-de-muertos-event.mp4','video/mp4'],['video/dia-de-muertos-event.webm','video/webm']]},
 lan:{

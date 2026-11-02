@@ -3,7 +3,7 @@ const R=(a,b)=>a+Math.random()*(b-a);
 const FEST=[
  {id:'lan',ko:'이펭 등불축제',en:'Yi Peng',where:'태국 치앙마이',mat:'종이와 나무, 안에서 나오는 불빛',c:'#ffb347',fact:'등불에 걱정과 불운을 담아 하늘로 보낸다고 믿어요.',ph:'소원을 적어보세요',btn:'띄우기',unit:'모은 등불',gauge:'누르거나 폰을 흔들어 모아요',banner:'대점등'},
  {id:'dead',ko:'죽은 자의 날',en:'Día de Muertos',where:'멕시코',mat:'설탕 반죽과 진짜 금잔화',c:'#ff9a1f',fact:'금잔화 꽃길이 영혼이 집을 찾아오는 길이 된다고 믿어요.',ph:'기억하고 싶은 이름',btn:'켜기',unit:'밝힌 촛불',gauge:'눌러서 촛불을 밝혀요',banner:'영혼의 길'},
- {id:'tom',ko:'라 토마티나',en:'La Tomatina',where:'스페인 부뇰',mat:'방울토마토 인물과 소금빛 건물',c:'#ff4a36',fact:'트럭 여러 대분의 토마토가 풀리고, 약 한 시간 던진 뒤 소방차가 거리를 씻어내요.',unit:'토마토'},
+ {id:'tom',ko:'라 토마티나',en:'La Tomatina',where:'스페인 부뇰',mat:'방울토마토 인물과 소금빛 건물',c:'#ff4a36',fact:'트럭 여러 대분의 토마토가 풀리고, 약 한 시간 던진 뒤 소방차가 거리를 씻어내요.',unit:'던진 토마토',gauge:'눌러서 토마토를 던져요',banner:'토마토 대전!'},
  {id:'burn',ko:'버닝맨',en:'Burning Man',where:'미국 네바다 사막',mat:'골판지와 철사',c:'#ff7a3d',locked:1},
  {id:'holi',ko:'홀리',en:'Holi',where:'인도 · 네팔',mat:'색분필 가루',c:'#ff48b0',locked:1},
  {id:'song',ko:'송끄란',en:'Songkran',where:'태국',mat:'유리와 물방울',c:'#3ec9ff',locked:1}
