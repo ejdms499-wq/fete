@@ -6,7 +6,7 @@ const FEST=[
  {id:'tom',ko:'라 토마티나',en:'La Tomatina',where:'스페인 부뇰',mat:'방울토마토 인물과 소금빛 건물',c:'#ff4a36',fact:'트럭 여러 대분의 토마토가 풀리고, 약 한 시간 던진 뒤 소방차가 거리를 씻어내요.',unit:'던진 토마토',gauge:'눌러서 토마토를 던져요',banner:'토마토 대전!'},
  {id:'burn',ko:'버닝맨',en:'Burning Man',where:'미국 네바다 사막',mat:'골판지와 철사',c:'#ff7a3d',fact:'사막에 일주일 동안만 생기는 도시예요. 돈 대신 선물을 주고받고, 마지막 밤에 나무 인형 맨을 태워요.',unit:'모은 불씨'},
  {id:'holi',ko:'홀리',en:'Holi',where:'인도 · 네팔',mat:'색분필 가루',c:'#ff48b0',fact:'봄이 온 걸 축하하며 서로에게 색 가루를 던져요. 이날만큼은 누구에게 가루를 묻혀도 괜찮아요.',unit:'던진 가루',gauge:'눌러서 색 가루를 던져요',banner:'색의 폭발'},
- {id:'song',ko:'송끄란',en:'Songkran',where:'태국',mat:'유리와 물방울',c:'#3ec9ff',locked:1}
+ {id:'song',ko:'송끄란',en:'Songkran',where:'태국',mat:'유리와 물방울',c:'#3ec9ff',fact:'태국의 새해예요. 물로 묵은 해의 나쁜 기운을 씻어내며, 길에서 만난 누구에게나 물을 뿌려요.',unit:'뿌린 물',gauge:'눌러서 물을 뿌려요',banner:'물싸움 시작!'}
 ];
 const OPEN=FEST.filter(f=>!f.locked);
 let seen={};try{seen=JSON.parse(localStorage.getItem('fete3-seen')||'{}')}catch(e){}

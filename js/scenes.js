@@ -132,3 +132,25 @@ SC.holi=()=>{let n=0,count=0,state='idle',puffs=[],evT=-1;const NEED=10;
     for(let i=puffs.length-1;i>=0;i--){const p=puffs[i];p.age+=dt;if(p.age>p.l){puffs.splice(i,1);continue}p.vx*=.95;p.vy=p.vy*.95+(p.dot?260:14)*dt*W/430;p.x+=p.vx*dt;p.y+=p.vy*dt;const k=p.age/p.l,a=(1-k)*(p.dot?1:.55);
       if(p.dot){cx.globalAlpha=a;cx.fillStyle='rgb('+p.c+')';cx.beginPath();cx.arc(p.x,p.y,p.r,0,7);cx.fill();cx.globalAlpha=1}
       else{const r=p.r*(1+k*1.4);const g=cx.createRadialGradient(p.x,p.y,0,p.x,p.y,r);g.addColorStop(0,'rgba('+p.c+','+a+')');g.addColorStop(.6,'rgba('+p.c+','+a*.5+')');g.addColorStop(1,'rgba('+p.c+',0)');cx.fillStyle=g;cx.fillRect(p.x-r,p.y-r,r*2,r*2)}}}}};
+
+/* ---------- 송끄란: 영상 + 게이지 이벤트(물싸움) ---------- */
+SC.song=()=>{let n=0,count=0,state='idle',dr=[],rip=[],evT=-1;const NEED=10;
+  const q=sel=>cur.el.querySelector(sel);
+  const bar=v=>{const i=q('.gauge i');if(i)i.style.width=Math.round(v*100)+'%'};
+  const splash=(x,y,k,sp)=>{for(let i=0;i<k;i++){const a=R(-3.0,-.15),v=R(80,sp)*W/430;dr.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,r:R(2,4.5)*W/430,age:0,l:R(.5,1.1)})}rip.push({x,y,age:0})};
+  const water=()=>{noise(.35,'highpass',2400,.18);noise(.2,'bandpass',900,.1)};
+  function fire(){if(state!=='idle')return;const ve=q('video.ve'),bn=q('.banner');if(!ve)return;state='event';
+    try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');evT=0;vib([30,30,30,30,60]);
+    [0,5,9,12,16].forEach((k,i)=>tone(587.3*Math.pow(2,k/12),i*.09,1.2,.07));noise(1.4,'highpass',3000,.15);
+    if(bn){bn.classList.remove('show','sync');void bn.offsetWidth;bn.classList.add('show')}
+    let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);
+      const vl=q('video.vl');if(vl){try{vl.currentTime=0}catch(e){}const p2=vl.play();p2&&p2.catch&&p2.catch(()=>{})}
+      ve.classList.add('hold');ve.classList.remove('on');tone(784,0,2.2,.04);
+      setTimeout(()=>{ve.pause();ve.classList.remove('hold');state='idle';count=0;bar(0)},3000)};
+    ve.addEventListener('ended',done);setTimeout(done,8000)}
+  return{init(){n=0;count=0;state='idle';dr=[];rip=[];evT=-1;bar(0)},
+  tap(x,y){splash(x,y,22,330);water();if(state!=='idle')return;count++;n++;bar(count/NEED);meter('뿌린 물 '+n);if(count>=NEED)fire()},
+  draw(dt){if(evT>=0){evT+=dt;if(evT<4.5){if(Math.random()<dt*4)splash(R(0,W),R(H*.15,H*.75),16,420)}else evT=-1}
+    for(let i=rip.length-1;i>=0;i--){const r=rip[i];r.age+=dt;if(r.age>.8){rip.splice(i,1);continue}const k=r.age/.8;cx.strokeStyle='rgba(225,248,255,'+(1-k)*.7+')';cx.lineWidth=2*W/430;cx.beginPath();cx.ellipse(r.x,r.y,W*.13*k,W*.05*k,0,0,7);cx.stroke()}
+    for(let i=dr.length-1;i>=0;i--){const d=dr[i];d.age+=dt;if(d.age>d.l){dr.splice(i,1);continue}d.vy+=900*dt*W/430;d.x+=d.vx*dt;d.y+=d.vy*dt;const a=Math.min(1,(d.l-d.age)*3);
+      const g=cx.createRadialGradient(d.x-d.r*.3,d.y-d.r*.3,0,d.x,d.y,d.r);g.addColorStop(0,'rgba(255,255,255,'+a+')');g.addColorStop(.6,'rgba(200,240,255,'+a*.7+')');g.addColorStop(1,'rgba(150,215,255,'+a*.25+')');cx.fillStyle=g;cx.beginPath();cx.arc(d.x,d.y,d.r,0,7);cx.fill()}}}};
