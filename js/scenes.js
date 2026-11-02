@@ -7,8 +7,11 @@ SC.lan=()=>{let n=0,count=0,state='idle',glows=[],fl=[];const NEED=10;
   function fire(offset,sync){if(state!=='idle')return false;const ve=q('video.ve'),bn=q('.banner');if(!ve)return false;state='event';
     try{ve.currentTime=Math.max(0,offset||0)}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');big();vib([30,40,60]);
     if(bn){bn.textContent=sync?'지금, 모두 함께':'대점등';bn.classList.toggle('sync',!!sync);bn.classList.remove('show');void bn.offsetWidth;bn.classList.add('show')}
-    let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);setTimeout(()=>{ve.classList.remove('on');state='idle';count=0;bar(0);setTimeout(()=>{ve.pause()},1000)},300)};
-    ve.addEventListener('ended',done);setTimeout(done,6500);return true}
+    let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);
+      const vl=q('video.vl');if(vl){try{vl.currentTime=0}catch(e){}const p2=vl.play();p2&&p2.catch&&p2.catch(()=>{})}
+      ve.classList.add('hold');ve.classList.remove('on');tone(392,0,2.8,.05);tone(587.3,.25,2.6,.04);
+      setTimeout(()=>{ve.pause();ve.classList.remove('hold');state='idle';count=0;bar(0)},3000)};
+    ve.addEventListener('ended',done);setTimeout(done,11000);return true}
   function addG(k){if(state!=='idle')return;count=Math.min(NEED,count+k);n+=k;bar(count/NEED);meter('모은 등불 '+n);if(count>=NEED)fire(0,false)}
   function release(name,msg){fl.push({x:W*R(.3,.7),y:H+W*.4,ph:R(0,6.3),age:0,name:name||'',msg:msg||''})}
   window.lanApi={add:addG,fire,release,busy:()=>state!=='idle'};

@@ -1,7 +1,7 @@
 /* 이펭: 매일 밤 9시 함께 점등 · 폰 움직임 · 친구에게 등불 보내기 */
 (function(){
 const EVT_HOUR_UTC=12;          /* 한국 시간 21:00 */
-const EVT_SEC=4.7;               /* 이벤트 영상 길이 */
+const EVT_SEC=7.4;               /* 이벤트 영상 길이 */
 const $$=s=>document.querySelector(s);
 const nowMs=()=>Date.now()+(window.FETE_OFFSET||0);
 function evtInfo(now){const d=new Date(now);let t=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate(),EVT_HOUR_UTC,0,0);
