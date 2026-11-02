@@ -210,3 +210,8 @@ body,button,input{font-family:var(--sans)}
 @keyframes castdot{50%{opacity:.25}}
 #cast .ct{display:block;font-family:var(--sans);font-size:13.5px;line-height:1.5;word-break:keep-all}
 .cap .dday{display:inline-block;margin-left:9px;padding:2px 8px;border-radius:99px;border:1px solid rgba(255,255,255,.35);font-family:var(--sans);font-style:normal;font-size:10.5px;letter-spacing:.03em;color:#fff3e2;vertical-align:3px;background:rgba(0,0,0,.25)}
+/* 중계: 박스 대신 자막처럼 (장면을 가리지 않게) */
+#cast{top:auto;bottom:calc(196px + env(safe-area-inset-bottom));left:20px;right:20px;width:auto;transform:translateY(6px);background:none;backdrop-filter:none;-webkit-backdrop-filter:none;border:0;border-radius:0;padding:0;text-align:left}
+#cast.on{transform:none}
+#cast .cw{font-size:10px;margin-bottom:2px;text-shadow:0 1px 6px rgba(0,0,0,.8)}
+#cast .ct{font-size:13px;line-height:1.45;text-shadow:0 1px 3px rgba(0,0,0,.9),0 0 14px rgba(0,0,0,.7);max-width:92%}
