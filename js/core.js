@@ -28,13 +28,21 @@ const vib=n=>{try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}};
 const track=$('#track'),frame=$('#frame');let cv=null,cx=null,W=1,H=1,D=1;
 const worlds=[];let idx=0,lastAct=performance.now(),scene=null,cur=null,raf=0,last=0;
 const meter=t=>{if(cur&&cur.met)cur.met.textContent=t};
+/* 현장 중계 한 줄 */
+const castQ=[];let castOn=false,castT=null,castWho=null;
+const castDone=new Set();function cast(id,key){const L=CAST[id]&&CAST[id][key];if(!L||castDone.has(id+key))return;castDone.add(id+key);L.forEach(t=>castQ.push({id,t}));if(!castOn)castNext()}
+function castNext(){const el=$('#cast');if(!el)return;const o=castQ.shift();if(!o){castOn=false;el.classList.remove('on');return}
+  if(!cur||cur.f.id!==o.id){castNext();return}castOn=true;
+  el.querySelector('.cw').textContent=REAL[o.id].where+' · 현장';el.querySelector('.ct').textContent=o.t;
+  el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(castT);castT=setTimeout(castNext,Math.max(3600,o.t.length*120))}
+function castClear(){castQ.length=0;clearTimeout(castT);castOn=false;const el=$('#cast');if(el)el.classList.remove('on')}
 const halo=(x,y,r,rgb,a)=>{const g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'rgba('+rgb+','+a+')');g.addColorStop(1,'rgba('+rgb+',0)');cx.fillStyle=g;cx.fillRect(x-r,y-r,r*2,r*2)};
 const add=(c,t)=>{c.globalCompositeOperation=t};
 const shake=()=>{if(!cur)return;cur.el.classList.remove('shake');void cur.el.offsetWidth;cur.el.classList.add('shake')};
 const SC={};
 FEST.forEach((f,i)=>{const el=document.createElement('div');el.className='world'+(f.locked?' locked':'');el.style.setProperty('--c',f.c);const w={f,el,i,scene:null,cv:null,met:null};
   if(f.locked){el.innerHTML='<div class="big">'+f.ko+'</div><div class="cap"><div class="en">'+f.en+'</div><h2>'+f.ko+'</h2><div class="mat"><b>재료</b>'+f.mat+'</div><div class="soon">곧 열려요 · '+f.where+'</div></div>'}
-  else{el.innerHTML='<img class="bg" alt="" src="'+IMG[f.id]+'"><canvas></canvas><div class="cap"><div class="en">'+f.en+'</div><div class="row"><h2>'+f.ko+'</h2><div class="meter"></div></div><div class="mat"><b>재료</b>'+f.mat+' · '+f.where+'</div><div class="fact">'+f.fact+'</div></div>';w.cv=el.querySelector('canvas');w.met=el.querySelector('.meter')}
+  else{el.innerHTML='<img class="bg" alt="" src="'+IMG[f.id]+'"><canvas></canvas><div class="cap"><div class="en">'+f.en+'<span class="dday">'+realLabel(f.id)+'</span></div><div class="row"><h2>'+f.ko+'</h2><div class="meter"></div></div><div class="mat"><b>재료</b>'+f.mat+' · '+f.where+'</div><div class="fact">'+f.fact+'</div></div>';w.cv=el.querySelector('canvas');w.met=el.querySelector('.meter')}
   if(!f.locked&&VID[f.id]){const v=VID[f.id];
     const mk=(cls,files)=>{const x=document.createElement('video');x.className=cls;x.muted=true;x.defaultMuted=true;x.playsInline=true;x.setAttribute('playsinline','');x.setAttribute('muted','');x.preload='auto';if(cls==='vl')x.loop=true;files.forEach(([src,type])=>{const s=document.createElement('source');s.src=src;s.type=type;x.appendChild(s)});return x};
     const vl=mk('vl',v.loop);const im=el.querySelector('img.bg');im.after(vl);if(v.event){const ve=mk('ve',v.event);vl.after(ve)}if(STAGE[f.id]){const sg=document.createElement('img');sg.className='stage';sg.alt='';sg.src=STAGE[f.id];el.querySelector('canvas').before(sg)}
@@ -42,7 +50,7 @@ FEST.forEach((f,i)=>{const el=document.createElement('div');el.className='world'
     el.insertAdjacentHTML('beforeend','<div class="banner">'+(f.banner||'대점등')+'</div>')}
   track.appendChild(el);worlds.push(w);const t=document.createElement('div');t.className='tick';$('#ticks').appendChild(t)});
 function fit(w){if(!w.cv)return;const r=w.cv.getBoundingClientRect();D=Math.min(devicePixelRatio||1,2);W=Math.max(10,r.width);H=Math.max(10,r.height);w.cv.width=Math.ceil(W*D);w.cv.height=Math.ceil(H*D);cx=w.cv.getContext('2d');cx.setTransform(D,0,0,D,0,0)}
-function activate(n,instant){idx=Math.max(0,Math.min(worlds.length-1,n));cur=worlds[idx];
+function activate(n,instant){castClear();idx=Math.max(0,Math.min(worlds.length-1,n));cur=worlds[idx];
   track.style.transform='translateY('+(-idx*100)+'%)';
   document.querySelectorAll('.tick').forEach((t,i)=>t.classList.toggle('on',i===idx));
   const f=cur.f;cv=cur.cv;scene=null;

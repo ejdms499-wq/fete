@@ -9,9 +9,7 @@
 <meta property="og:description" content="세계의 축제를 손으로 만지는 곳">
 <meta property="og:image" content="img/yi-peng.jpg">
 <title>FÊTE</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@1,9..144,500..700,100,1&family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fonts/fonts.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -26,11 +24,12 @@
   <div class="ticks" id="ticks"></div>
   <div class="hint" id="hint"><div class="ring"></div>눌러보세요<br><span style="opacity:.8;font-size:12px">위로 쓸면 다음 축제</span></div>
   <div id="lanUI" hidden>
-    <div class="lanTop"><i class="pulse"></i><div><b id="cd">--:--:--</b><small>매일 밤 9시 대점등 · 한국 시간</small></div></div>
+    <div class="lanTop"><i class="pulse"></i><div><b id="cd">--:--:--</b><small>밤 9시 대점등</small></div></div>
     <button class="pill" id="motionBtn" hidden>폰 움직임 켜기</button>
-    <button class="pill send" id="sendBtn">친구에게 등불 보내기</button>
+    <button class="pill send" id="sendBtn">등불 보내기 ✉︎</button>
   </div>
   <div id="toast" role="status"></div>
+  <div id="cast" aria-live="polite"><span class="cw"></span><span class="ct"></span></div>
   <div id="sheet" class="sheet" hidden>
     <div class="sheetbox">
       <div id="sForm">

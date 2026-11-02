@@ -1,9 +1,9 @@
 /* layout idea: no home page. The phone opens straight into a festival world; swipe up and the material changes underneath your thumb. A capsule machine picks tonight's festival. */
 :root{
   --bg:#0b0710; --paper:#fff3e2; --mute:#c9b8d6; --line:rgba(255,243,226,.28);
-  --it:'Fraunces','Gowun Batang',Georgia,serif;
-  --ko:'Jua','Gowun Dodum','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
-  --sans:'Gowun Dodum','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  --it:'Fraunces','Hahmlet',Georgia,serif;
+  --ko:'Hahmlet','Gowun Batang','Apple SD Gothic Neo',serif;
+  --sans:'Gowun Batang','Apple SD Gothic Neo','Malgun Gothic',serif;
   color-scheme:dark;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -184,3 +184,29 @@ body,button,input{font-family:var(--sans)}
 .world video.vb{opacity:0;transition:opacity .3s ease}.world video.vb.on{opacity:1}.world video.vb.out{transition:opacity 1s ease}
 @keyframes jolt{0%{transform:translate(0,0)}15%{transform:translate(-9px,6px) scale(1.02)}30%{transform:translate(8px,-5px) scale(1.02)}45%{transform:translate(-6px,-4px)}60%{transform:translate(5px,4px)}80%{transform:translate(-2px,1px)}100%{transform:none}}.world.jolt{animation:jolt .55s cubic-bezier(.3,.7,.4,1)}
 .banner{text-shadow:0 2px 3px rgba(40,10,30,.45),0 0 22px #ffb347,0 0 50px #ff8a30,0 4px 30px rgba(30,5,30,.5)}
+/* v4 타이포·레이아웃 정리 */
+.lanTop{top:calc(58px + env(safe-area-inset-top));left:14px;padding:5px 12px 5px 10px;gap:8px;background:rgba(10,6,16,.38)}
+.lanTop>div{display:flex;flex-direction:row-reverse;align-items:baseline;gap:7px}
+.lanTop b{font-family:var(--sans);font-weight:700;font-size:13px;letter-spacing:.04em}
+.lanTop small{font-size:11px;margin:0;opacity:.85}
+.lanTop .pulse{width:7px;height:7px}
+.pill{font-family:var(--sans)}
+.pill.send{top:calc(58px + env(safe-area-inset-top));right:14px;bottom:auto;padding:5px 12px;font-size:12px;background:rgba(10,6,16,.38);border-color:rgba(255,255,255,.4)}
+#motionBtn{top:calc(94px + env(safe-area-inset-top));padding:5px 12px;font-size:12px}
+.cap .mat{display:none}
+.cap .en{font-weight:400;font-size:17px}
+.cap h2{font-weight:600;font-size:clamp(32px,9.5vw,44px);letter-spacing:-.02em;text-shadow:0 2px 18px rgba(0,0,0,.55)}
+.cap .fact{font-size:13px;line-height:1.55;opacity:.9}
+.banner{font-weight:600;font-size:clamp(40px,12.5vw,60px);letter-spacing:-.02em;text-shadow:0 2px 4px rgba(30,10,30,.5),0 0 24px rgba(255,190,130,.75),0 0 60px rgba(255,140,60,.45)}
+.banner.sync{font-size:clamp(28px,8.4vw,40px)}
+.gauge span{font-size:12.5px;letter-spacing:.01em}
+.mark{font-weight:600}
+
+#cast{position:absolute;left:50%;top:calc(96px + env(safe-area-inset-top));transform:translate(-50%,-8px);width:min(88%,380px);z-index:12;pointer-events:none;opacity:0;transition:opacity .5s ease,transform .5s ease;
+  background:rgba(12,8,18,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:9px 14px 10px;color:#fff6ea;text-align:left}
+#cast.on{opacity:1;transform:translate(-50%,0)}
+#cast .cw{display:flex;align-items:center;gap:6px;font-family:var(--sans);font-size:10.5px;letter-spacing:.08em;color:#ffcf9e;margin-bottom:3px}
+#cast .cw::before{content:"";width:6px;height:6px;border-radius:50%;background:#ff5a4a;box-shadow:0 0 8px #ff5a4a;animation:castdot 1.2s ease-in-out infinite}
+@keyframes castdot{50%{opacity:.25}}
+#cast .ct{display:block;font-family:var(--sans);font-size:13.5px;line-height:1.5;word-break:keep-all}
+.cap .dday{display:inline-block;margin-left:9px;padding:2px 8px;border-radius:99px;border:1px solid rgba(255,255,255,.35);font-family:var(--sans);font-style:normal;font-size:10.5px;letter-spacing:.03em;color:#fff3e2;vertical-align:3px;background:rgba(0,0,0,.25)}
