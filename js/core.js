@@ -40,11 +40,11 @@ function fit(w){if(!w.cv)return;const r=w.cv.getBoundingClientRect();D=Math.min(
 function activate(n,instant){idx=Math.max(0,Math.min(worlds.length-1,n));cur=worlds[idx];
   track.style.transform='translateY('+(-idx*100)+'%)';
   document.querySelectorAll('.tick').forEach((t,i)=>t.classList.toggle('on',i===idx));
-  const wb=$('#wishbar'),f=cur.f;cv=cur.cv;scene=null;
+  const f=cur.f;cv=cur.cv;scene=null;
   if(!f.locked){fit(cur);if(!cur.scene){cur.scene=SC[f.id]();cur.scene.init();meter(f.unit+' 0')}scene=cur.scene;
-    wb.classList.toggle('on',f.id==='lan'||f.id==='dead');if(f.id==='lan'||f.id==='dead'){$('#wish').placeholder=f.ph;$('#wishgo').textContent=f.btn}
+    
     seen[f.id]=1;saveSeen();renderDots();$('#blur').style.backgroundImage='url('+IMG[f.id]+')'}
-  else{wb.classList.remove('on');$('#blur').style.backgroundImage='none'}
+  else{$('#blur').style.backgroundImage='none'}
   worlds.forEach((w,i)=>{if(w.cv&&i!==idx){w.cv.getContext('2d').clearRect(0,0,w.cv.width,w.cv.height)}});
   lastAct=performance.now()}
 function loop(t){const dt=Math.min((t-last)/1000,.05);last=t;
@@ -65,7 +65,6 @@ gest.addEventListener('pointerup',end);gest.addEventListener('pointercancel',e=>
 let wl=0;addEventListener('wheel',e=>{const n=performance.now();if(n-wl<600||Math.abs(e.deltaY)<20)return;wl=n;activate(idx+(e.deltaY>0?1:-1));hideHint()},{passive:true});
 addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='ArrowDown')activate(idx+1);if(e.key==='ArrowUp')activate(idx-1);if(e.key==='Escape')$('#gacha').classList.remove('open')});
 addEventListener('resize',()=>{if(cur&&!cur.f.locked){fit(cur);}});
-$('#wishbar').addEventListener('submit',e=>{e.preventDefault();const v=$('#wish').value.trim();if(scene&&scene.wish){scene.wish(v);lastAct=performance.now();hideHint()}$('#wish').value=''});
 
 /* 반짝이 */
 (function(){const f=$('#frame');for(let i=0;i<14;i++){const s=document.createElement('span');s.className='sparkle';s.textContent=Math.random()<.5?'✦':'✧';s.style.left=R(4,94)+'%';s.style.top=R(9,66)+'%';s.style.fontSize=R(10,22)+'px';s.style.animationDelay=(-R(0,3.2))+'s';s.style.animationDuration=R(2.4,4.6)+'s';f.insertBefore(s,$('#gest'))}})();
