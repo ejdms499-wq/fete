@@ -60,11 +60,13 @@ function loop(t){const dt=Math.min((t-last)/1000,.05);last=t;
 /* gestures */
 const gest=$('#gest');let g0=null,mode=null;const hint=$('#hint');
 const hideHint=()=>hint.classList.add('off');
-gest.addEventListener('pointerdown',e=>{try{gest.setPointerCapture(e.pointerId)}catch(_){}g0={x:e.clientX,y:e.clientY,t:performance.now()};mode=null;ac()});
+gest.addEventListener('pointerdown',e=>{try{gest.setPointerCapture(e.pointerId)}catch(_){}g0={x:e.clientX,y:e.clientY,t:performance.now()};mode=null;ac();
+  if(scene&&scene.wants&&scene.wants()){mode='scrub';const r=cv.getBoundingClientRect();scene.scrub(e.clientX-r.left,e.clientY-r.top,true)}});
 gest.addEventListener('pointermove',e=>{if(!g0)return;const dx=e.clientX-g0.x,dy=e.clientY-g0.y;
+  if(mode==='scrub'){const r=cv.getBoundingClientRect();scene&&scene.scrub&&scene.scrub(e.clientX-r.left,e.clientY-r.top,false);return}
   if(!mode&&(Math.abs(dy)>12||Math.abs(dx)>12)){mode=Math.abs(dy)>Math.abs(dx)?'swipe':'none'}
   if(mode==='swipe'){track.classList.add('drag');let d=dy;if((idx===0&&dy>0)||(idx===worlds.length-1&&dy<0))d=dy*.25;track.style.transform='translateY(calc('+(-idx*100)+'% + '+d+'px))'}});
-function end(e){if(!g0)return;const dy=e.clientY-g0.y,dt=performance.now()-g0.t;const wasSwipe=mode==='swipe';track.classList.remove('drag');
+function end(e){if(!g0)return;if(mode==='scrub'){g0=null;mode=null;return}const dy=e.clientY-g0.y,dt=performance.now()-g0.t;const wasSwipe=mode==='swipe';track.classList.remove('drag');
   if(wasSwipe){const fast=Math.abs(dy)/dt>.5;let n=idx;if(Math.abs(dy)>70||(fast&&Math.abs(dy)>25))n=idx+(dy<0?1:-1);activate(n);hideHint();vib(8)}
   else if(!mode&&scene){const r=cv.getBoundingClientRect();lastAct=performance.now();hideHint();scene.tap(e.clientX-r.left,e.clientY-r.top)}
   g0=null;mode=null}
