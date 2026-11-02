@@ -61,7 +61,7 @@ function loop(t){const dt=Math.min((t-last)/1000,.05);last=t;
 const gest=$('#gest');let g0=null,mode=null;const hint=$('#hint');
 const hideHint=()=>hint.classList.add('off');
 gest.addEventListener('pointerdown',e=>{try{gest.setPointerCapture(e.pointerId)}catch(_){}g0={x:e.clientX,y:e.clientY,t:performance.now()};mode=null;ac();
-  if(scene&&scene.wants&&scene.wants()){mode='scrub';const r=cv.getBoundingClientRect();scene.scrub(e.clientX-r.left,e.clientY-r.top,true)}});
+  if(scene&&scene.wants&&scene.wants()){mode='scrub';hideHint();const r=cv.getBoundingClientRect();scene.scrub(e.clientX-r.left,e.clientY-r.top,true)}});
 gest.addEventListener('pointermove',e=>{if(!g0)return;const dx=e.clientX-g0.x,dy=e.clientY-g0.y;
   if(mode==='scrub'){const r=cv.getBoundingClientRect();scene&&scene.scrub&&scene.scrub(e.clientX-r.left,e.clientY-r.top,false);return}
   if(!mode&&(Math.abs(dy)>12||Math.abs(dx)>12)){mode=Math.abs(dy)>Math.abs(dx)?'swipe':'none'}
