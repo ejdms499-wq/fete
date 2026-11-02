@@ -20,3 +20,6 @@ dead:{
 lan:{
   loop:[['video/yi-peng-loop.mp4','video/mp4'],['video/yi-peng-loop.webm','video/webm']],
   event:[['video/yi-peng-event.mp4','video/mp4'],['video/yi-peng-event.webm','video/webm']]}};
+
+/* 의식 단계 이미지 */
+const STAGE={tom:'img/la-tomatina-pole.jpg',song:'img/songkran-ritual.jpg',holi:'img/holi-night.jpg'};

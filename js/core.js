@@ -37,7 +37,7 @@ FEST.forEach((f,i)=>{const el=document.createElement('div');el.className='world'
   else{el.innerHTML='<img class="bg" alt="" src="'+IMG[f.id]+'"><canvas></canvas><div class="cap"><div class="en">'+f.en+'</div><div class="row"><h2>'+f.ko+'</h2><div class="meter"></div></div><div class="mat"><b>재료</b>'+f.mat+' · '+f.where+'</div><div class="fact">'+f.fact+'</div></div>';w.cv=el.querySelector('canvas');w.met=el.querySelector('.meter')}
   if(!f.locked&&VID[f.id]){const v=VID[f.id];
     const mk=(cls,files)=>{const x=document.createElement('video');x.className=cls;x.muted=true;x.defaultMuted=true;x.playsInline=true;x.setAttribute('playsinline','');x.setAttribute('muted','');x.preload='auto';if(cls==='vl')x.loop=true;files.forEach(([src,type])=>{const s=document.createElement('source');s.src=src;s.type=type;x.appendChild(s)});return x};
-    const vl=mk('vl',v.loop);const im=el.querySelector('img.bg');im.after(vl);if(v.event){const ve=mk('ve',v.event);vl.after(ve)}
+    const vl=mk('vl',v.loop);const im=el.querySelector('img.bg');im.after(vl);if(v.event){const ve=mk('ve',v.event);vl.after(ve)}if(STAGE[f.id]){const sg=document.createElement('img');sg.className='stage';sg.alt='';sg.src=STAGE[f.id];el.querySelector('canvas').before(sg)}
     if(v.event)el.querySelector('.cap').insertAdjacentHTML('afterbegin','<div class="gauge"><span>'+(f.gauge||'눌러서 모아요')+'</span><b><i></i></b></div>');
     el.insertAdjacentHTML('beforeend','<div class="banner">'+(f.banner||'대점등')+'</div>')}
   track.appendChild(el);worlds.push(w);const t=document.createElement('div');t.className='tick';$('#ticks').appendChild(t)});
@@ -46,7 +46,7 @@ function activate(n,instant){idx=Math.max(0,Math.min(worlds.length-1,n));cur=wor
   track.style.transform='translateY('+(-idx*100)+'%)';
   document.querySelectorAll('.tick').forEach((t,i)=>t.classList.toggle('on',i===idx));
   const f=cur.f;cv=cur.cv;scene=null;
-  if(!f.locked){fit(cur);if(!cur.scene){cur.scene=SC[f.id]();cur.scene.init();meter(f.unit+' 0')}scene=cur.scene;
+  if(!f.locked){fit(cur);if(!cur.scene){meter(f.unit+' 0');cur.scene=SC[f.id]();cur.scene.init()}scene=cur.scene;
     
     seen[f.id]=1;saveSeen();renderDots();$('#blur').style.backgroundImage='url('+IMG[f.id]+')'}
   else{$('#blur').style.backgroundImage='none'}
