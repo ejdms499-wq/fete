@@ -100,12 +100,24 @@ SC.tom=()=>{let n=0,count=0,state='idle',drops=[],spl=[],dirt=null,dx=null,water
     for(let i=drops.length-1;i>=0;i--){const d=drops[i];d.age+=dt;if(d.age>d.l){drops.splice(i,1);continue}d.vy+=1100*dt*W/430;d.x+=d.vx*dt;d.y+=d.vy*dt;
       cx.globalAlpha=Math.min(1,(d.l-d.age)*4);cx.fillStyle=d.seed>.8?'#ffb24a':'#e2321e';cx.beginPath();cx.arc(d.x,d.y,d.r,0,7);cx.fill();cx.globalAlpha=1}}}};
 
-/* ---------- 버닝맨: 영상 반복 + 누르면 불씨와 먼지 (불태우기 이벤트는 영상 준비 중) ---------- */
-SC.burn=()=>{let n=0,sp=[];
+/* ---------- 버닝맨: 영상 + 게이지 이벤트(맨 태우기) ---------- */
+SC.burn=()=>{let n=0,count=0,state='idle',sp=[],evT=-1;const NEED=10;
+  const q=sel=>cur.el.querySelector(sel);
+  const bar=v=>{const i=q('.gauge i');if(i)i.style.width=Math.round(v*100)+'%'};
   const emb=(x,y,k)=>{for(let i=0;i<k;i++){const a=R(-2.7,-.45),v=R(50,170)*W/430;sp.push({x,y,vx:Math.cos(a)*v*.7,vy:Math.sin(a)*v,r:R(2.5,5)*W/430,l:R(1,2.2),age:0,ph:R(0,6),dust:Math.random()<.35})}};
-  return{init(){n=0;sp=[]},
-  tap(x,y){emb(x,y,20);n++;meter('모은 불씨 '+n);noise(.3,'bandpass',600,.15);tone(196,0,.6,.04,'triangle')},
+  function fire(){if(state!=='idle')return;const ve=q('video.ve'),bn=q('.banner');if(!ve)return;state='event';
+    try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');evT=0;vib([40,40,80]);
+    [0,3,7,10].forEach((k,i)=>tone(196*Math.pow(2,k/12),i*.25,2.6,.07,'triangle'));noise(4,'lowpass',500,.12);
+    if(bn){bn.classList.remove('show','sync');void bn.offsetWidth;bn.classList.add('show')}
+    let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);
+      const vl=q('video.vl');if(vl){try{vl.currentTime=0}catch(e){}const p2=vl.play();p2&&p2.catch&&p2.catch(()=>{})}
+      ve.classList.add('hold');ve.classList.remove('on');tone(130.8,0,3,.05,'triangle');
+      setTimeout(()=>{ve.pause();ve.classList.remove('hold');state='idle';count=0;bar(0)},3000)};
+    ve.addEventListener('ended',done);setTimeout(done,8000)}
+  return{init(){n=0;count=0;state='idle';sp=[];evT=-1;bar(0)},
+  tap(x,y){emb(x,y,20);noise(.3,'bandpass',600,.15);tone(196,0,.6,.04,'triangle');if(state!=='idle')return;count++;n++;bar(count/NEED);meter('모은 불씨 '+n);if(count>=NEED)fire()},
   draw(dt){const t=performance.now()/1000;
+    if(evT>=0){evT+=dt;if(evT<5){if(evT>1.5&&Math.random()<dt*14){const e=sp.length;emb(W*R(.35,.65),H*R(.12,.45),3);for(let i=e;i<sp.length;i++)sp[i].dust=false}}else evT=-1}
     for(let i=sp.length-1;i>=0;i--){const p=sp[i];p.age+=dt;if(p.age>p.l){sp.splice(i,1);continue}p.vy+=(p.dust?20:-12)*dt;p.vx*=.98;p.x+=p.vx*dt+Math.sin(t*2.4+p.ph)*.5;p.y+=p.vy*dt;const a=Math.sin(Math.PI*p.age/p.l);
       if(p.dust){cx.globalAlpha=a*.35;cx.fillStyle='#f3d6c0';cx.beginPath();cx.arc(p.x,p.y,p.r*3,0,7);cx.fill();cx.globalAlpha=1}
       else{add(cx,'lighter');halo(p.x,p.y,p.r*6,'255,140,60',.65*a);cx.globalAlpha=a;cx.fillStyle='#ffe2a8';cx.beginPath();cx.arc(p.x,p.y,p.r*.6,0,7);cx.fill();cx.globalAlpha=1;add(cx,'source-over')}}}}};

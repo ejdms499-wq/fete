@@ -6,7 +6,8 @@ const VID={song:{
   loop:[['video/songkran-loop.mp4','video/mp4'],['video/songkran-loop.webm','video/webm']],
   event:[['video/songkran-event.mp4','video/mp4'],['video/songkran-event.webm','video/webm']]},
 burn:{
-  loop:[['video/burning-man-loop.mp4','video/mp4'],['video/burning-man-loop.webm','video/webm']]},
+  loop:[['video/burning-man-loop.mp4','video/mp4'],['video/burning-man-loop.webm','video/webm']],
+  event:[['video/burning-man-event.mp4','video/mp4'],['video/burning-man-event.webm','video/webm']]},
 holi:{
   loop:[['video/holi-loop.mp4','video/mp4'],['video/holi-loop.webm','video/webm']],
   event:[['video/holi-event.mp4','video/mp4'],['video/holi-event.webm','video/webm']]},
