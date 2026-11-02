@@ -6,8 +6,8 @@ const LUN=new Image();LUN.src='img/props/lantern-unlit.png';let LDARK=null;LSPR.
 SC.lan=()=>{let K,n=0,ok=0,state='ready',glows=[],fl=[],heat=0,holding=false,full=false,my=null,appear=0,whoosh=0,shook=0;
   const q=sel=>cur.el.querySelector(sel);
   const big=()=>{[0,4,7,12,16,19].forEach((k,i)=>tone(523.25*Math.pow(2,k/12),i*.16,2.4,.09));noise(1.2,'highpass',4200,.05)};
-  function ready(msg){state='ready';heat=0;full=false;holding=false;my=null;appear=0;K.bar(0);K.label(msg||'꾹 누르고 있으면 등불에 뜨거운 공기가 차요')}
-  function fire(offset,sync){if(state==='flight'||state==='event')return false;const ve=q('video.ve');if(!ve)return false;state='event';holding=false;my=null;
+  function ready(msg){K.dof(0);state='ready';heat=0;full=false;holding=false;my=null;appear=0;K.bar(0);K.label(msg||'꾹 눌러 등불을 꺼내고, 뜨거운 공기를 채워요')}
+  function fire(offset,sync){if(state==='flight'||state==='event')return false;const ve=q('video.ve');if(!ve)return false;K.dof(0);state='event';holding=false;my=null;
     try{ve.currentTime=Math.max(0,offset||0)}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');big();vib([30,40,60]);
     K.banner(sync?'지금, 모두 함께':'대점등',!!sync);K.label('모두 함께 하늘로');K.bar(0);
     let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);
@@ -15,21 +15,21 @@ SC.lan=()=>{let K,n=0,ok=0,state='ready',glows=[],fl=[],heat=0,holding=false,ful
       ve.classList.add('hold');ve.classList.remove('on');tone(392,0,2.8,.05);tone(587.3,.25,2.6,.04);
       K.later(()=>{ve.pause();ve.classList.remove('hold');ready('한 번 더 띄워볼까요? 꾹 눌러요')},3000)};
     ve.addEventListener('ended',done);K.later(done,11000);return true}
-  function launch(){state='flight';holding=false;const h=heat;my={p:0,life:0,lifeMax:8,rate:Math.pow(h,2)/6.4,x0:W*.5,dx:R(-1,1)*W*.18,ph:R(0,6),out:0,fall:0,h};
+  function launch(){K.dof(0);state='flight';holding=false;const h=heat;my={p:0,life:0,lifeMax:8,rate:Math.pow(h,2)/6.4,x0:W*.5,dx:R(-1,1)*W*.18,ph:R(0,6),out:0,fall:0,h};
     [0,7,12].forEach((k,i)=>tone(392*Math.pow(2,k/12),i*.18,1.8,.06));noise(1,'lowpass',700,.08);vib(15);
     K.label(h<.6?'공기가 덜 찼어요…':'불이 꺼지기 전에 하늘 끝까지 사라지면 행운이 온대요');K.bar(0);meter('띄운 등불 '+(++n))}
   function lucky(){ok++;K.banner('행운이 와요',true);chime();vib([20,40,20]);K.say('하늘 끝까지 갔어요!',W/2,H*.42,'#ffe6b8');
     K.later(()=>{if(ok===1||ok%3===0){K.label('');fire(0,false)}else ready('또 띄워볼까요? 꾹 눌러요')},2200)}
   function sendFl(name,msg){fl.push({x:W*R(.3,.7),y:H*.8,ph:R(0,6.3),age:0,name:name||'',msg:msg||''})}
   window.lanApi={add:k=>{if(state==='ready'&&!full){heat=Math.min(1,heat+.13*k);shook=1.4;K.bar(heat);glows.push({x:W/2,y:H*.66,t:.3})}},fire,release:sendFl,busy:()=>state==='flight'||state==='event'};
-  function lanXY(){if(!my)return{x:W*.5,y:H*.66,s:1};const e=1-Math.pow(1-Math.min(1,my.p),1.6);
+  function lanXY(){if(!my)return{x:W*.5,y:H*.64,s:1};const e=1-Math.pow(1-Math.min(1,my.p),1.6);
     return{x:my.x0+my.dx*e+Math.sin(my.life*1.2+my.ph)*W*.02*(1-e*.5),y:H*.66-(H*.62)*e+my.fall,s:1-.9*e}}
   return{init(){K=ritualKit();K.clear();n=0;ok=0;glows=[];fl=[];meter('띄운 등불 0');ready()},
   wants(){return state==='ready'},
-  scrub(x,y,first){if(state==='ready'&&first){holding=true;noise(.25,'highpass',2500,.06)}},
-  release(){if(state!=='ready')return;holding=false;if(heat>=.999)launch();else if(heat>.25)launch();else if(heat>0)K.label('조금 더 오래 꾹 눌러요')},
+  scrub(x,y,first){if(state==='ready'&&first){holding=true;K.dof(3.6,.75);noise(.25,'highpass',2500,.06)}},
+  release(){if(state!=='ready')return;holding=false;if(heat<.25)K.dof(0);if(heat>=.999)launch();else if(heat>.25)launch();else if(heat>0)K.label('조금 더 오래 꾹 눌러요')},
   tap(x,y){glows.push({x,y,t:0})},
-  draw(dt){const t=performance.now()/1000;appear=Math.min(1,appear+dt*1.5);
+  draw(dt){const t=performance.now()/1000;{const tg=state!=='ready'||holding||heat>.03||full||shook>0?1:0;appear+=(tg-appear)*Math.min(1,dt*(tg?4:2.5))}
     if(state==='ready'){if(holding||shook>0){heat=Math.min(1,heat+dt/3.6);whoosh-=dt;if(whoosh<=0){whoosh=.45;noise(.5,'bandpass',300+heat*500,.05)}
         K.bar(heat);if(heat>=.999&&!full){full=true;chime();vib(25);K.label('꽉 찼어요! 소원을 빌고 손을 떼요');if(!holding)K.later(()=>{if(state==='ready'&&full&&!holding)launch()},900)}
         else if(!full)K.label('뜨거운 공기가 차는 중… 손을 떼지 마요')}
@@ -53,7 +53,7 @@ SC.lan=()=>{let K,n=0,ok=0,state='ready',glows=[],fl=[],heat=0,holding=false,ful
         alpha=my.p>=1?Math.max(0,1-(my.p-1)*6):my.out>0?Math.max(0,1-my.out/3):1;
         if(my.p>=1)my.p+=my.rate*dt;
         if((my.p>=1&&alpha<=0)||(my.out>3.2)){const fail=my.out>0;my=null;if(fail)ready('꾹 눌러서 공기를 가득 채워요');else state='lucky'}}
-      if(state==='ready'||my){const P=lanXY(),w=W*.38*P.s,inf=state==='ready'?.82+.18*heat:1,h=w*232/181*inf,bob=state==='ready'&&full?Math.sin(t*6)*W*.008-W*.01:0,x=P.x,y=P.y+bob+(state==='ready'?Math.sin(t*1.7)*W*.004:0);
+      if((state==='ready'&&appear>.01)||my){const P=lanXY(),w=W*.46*P.s,inf=state==='ready'?.82+.18*heat:1,h=w*232/181*inf,bob=state==='ready'&&full?Math.sin(t*6)*W*.008-W*.01:0,x=P.x,y=P.y+bob+(state==='ready'?Math.sin(t*1.7)*W*.004+(1-appear)*H*.6:0);
         if(state==='ready'&&holding&&!full){cx.save();cx.translate(x,y);cx.rotate(Math.sin(t*9)*.012*heat)} else{cx.save();cx.translate(x,y)}
         cx.globalAlpha=alpha;add(cx,'lighter');halo(0,h*.15,w*(.6+1.4*lit),'255,150,60',.55*lit);add(cx,'source-over');
         if(okI(LUN)){const uw=w*1.02,uh=uw*LUN.naturalHeight/LUN.naturalWidth*(h/(w*232/181));cx.globalAlpha=alpha*Math.max(0,1-lit*.9);cx.drawImage(LUN,-uw/2,h/2-uh,uw,uh);cx.globalAlpha=alpha*lit;add(cx,'lighter');cx.globalAlpha=alpha*lit*.35;cx.drawImage(LUN,-uw/2,h/2-uh,uw,uh);add(cx,'source-over');cx.globalAlpha=alpha*lit}else if(LDARK)cx.drawImage(LDARK,-w/2,-h/2,w,h);cx.globalAlpha=alpha*lit;cx.drawImage(LSPR,-w/2,-h/2,w,h);
@@ -232,12 +232,12 @@ SC.burn=()=>{let K,n=0,count=0,state='idle',sp=[],evT=-1,G0='',B0='',card=null,i
       ve.classList.add('hold');ve.classList.remove('on');tone(130.8,0,3,.05,'triangle');
       K.later(()=>{ve.pause();ve.classList.remove('hold');toTemple()},3000)};
     ve.addEventListener('ended',done);K.later(done,8000)}
-  function toTemple(){state='write';K.stage(true);K.banner('다음 날 밤, 사원',true);[0,7,12].forEach((k,i)=>tone(220*Math.pow(2,k/12),i*.5,3,.04));
+  function toTemple(){state='write';K.stage(true);K.later(()=>{if(state==='write'){K.dof(4,.55);K.focus(true)}},1300);K.banner('다음 날 밤, 사원',true);[0,7,12].forEach((k,i)=>tone(220*Math.pow(2,k/12),i*.5,3,.04));
     K.label('보내고 싶은 사람에게 손가락으로 한 마디 적어요');K.bar(0);meter('사원');
-    const cw=Math.round(W*.46),ch=Math.round(cw*1.687);card={x:W/2,y:H*.5,w:cw,h:ch,rot:-.03,s:1,a:0};
+    const cw=Math.round(W*.46),ch=Math.round(cw*1.687);card={x:W/2,y:H*.46,w:cw,h:ch,rot:-.03,s:1,a:0};
     ink=document.createElement('canvas');ink.width=cw*2;ink.height=ch*2;ig=ink.getContext('2d');ig.scale(2,2);ig.lineCap='round';ig.lineJoin='round';inkLen=0;lastP=null}
   function local(x,y){const c=card,dx=x-c.x,dy=y-c.y,co=Math.cos(-c.rot),si=Math.sin(-c.rot);return{x:dx*co-dy*si+c.w/2,y:dx*si+dy*co+c.h/2}}
-  function pin(){state='pin';lastP=null;tT=0;chime();vib(20);K.label('사원 벽에 걸었어요');
+  function pin(){state='pin';lastP=null;tT=0;K.dof(0);K.focus(false);chime();vib(20);K.label('사원 벽에 걸었어요');
     const to=K.IP(.70,.47);card.fx=card.x;card.fy=card.y;card.tx=to.x;card.ty=to.y}
   function burnTemple(){state='silent';evT=0;shh=0;const vt=q('video.vt');K.label('사원이 탈 때는 모두 말없이 지켜봐요');K.bar(0);meter('고요');
     if(vt){try{vt.currentTime=0}catch(e){}const p=vt.play();p&&p.catch&&p.catch(()=>{});vt.classList.add('on')}
@@ -271,7 +271,7 @@ SC.burn=()=>{let K,n=0,count=0,state='idle',sp=[],evT=-1,G0='',B0='',card=null,i
   draw(dt){const t=performance.now()/1000;shh-=dt;
     if(evT>=0&&state==='event'){evT+=dt;if(evT<5){if(evT>1.5&&Math.random()<dt*14){const e=sp.length;emb(W*R(.35,.65),H*R(.12,.45),3);for(let i=e;i<sp.length;i++)sp[i].dust=false}}else evT=-1}
     if(card){if(state==='write')card.a=Math.min(1,card.a+dt*2.5);
-      if(state==='pin'){tT+=dt;const k=Math.min(1,tT/1.4),e=1-Math.pow(1-k,3);card.x=card.fx+(card.tx-card.fx)*e;card.y=card.fy+(card.ty-card.fy)*e-Math.sin(k*Math.PI)*H*.06;card.s=1-.8*e;card.rot=-.03+.1*e;if(k>=1&&!card.done){card.done=1;K.later(burnTemple,1600)}}
+      if(state==='pin'){tT+=dt;const k=Math.min(1,tT/1.4),e=1-Math.pow(1-k,3);card.x=card.fx+(card.tx-card.fx)*e;card.y=card.fy+(card.ty-card.fy)*e-Math.sin(k*Math.PI)*H*.06;card.s=1-.84*e;card.rot=-.03+.1*e;if(k>=1&&!card.done){card.done=1;K.later(burnTemple,1600)}}
       if(state==='silent'){card.burn=Math.min(1,Math.max(0,(evT-1.4)/1.6));if(evT>1.4&&evT<3.4&&Math.random()<dt*20)rise(card.x,card.y,2,card.w*card.s*.4);if(evT>3)card.a=Math.max(0,card.a-dt*1.5);if(card.a<=0)card=null}}
     if(state==='silent'){evT+=dt;if(evT>2&&Math.random()<dt*6)rise(W*R(.4,.8),H*R(.25,.55),1,W*.05)}
     if(state==='after'&&Math.random()<dt*10)rise(W*R(.2,.8),H*R(.5,.8),1,W*.05);
@@ -289,6 +289,8 @@ const ritualKit=()=>{const q=sel=>cur.el.querySelector(sel);const tm=[];
     banner:(t,small)=>{const b=q('.banner');if(!b)return;b.textContent=t;b.classList.remove('show','sync');b.classList.toggle('sync',!!small);void b.offsetWidth;b.classList.add('show')},
     later:(f,ms)=>tm.push(setTimeout(f,ms)),clear:()=>{tm.forEach(clearTimeout);tm.length=0},
     stage:on=>{const s=q('img.stage');if(s)s.classList.toggle('on',on)},
+    dof:(px,br)=>{cur.el.querySelectorAll('img.bg,video.vl,img.stage').forEach(e=>{e.style.transition='filter .9s ease, opacity 1.2s ease';e.style.filter=px?'blur('+px+'px) brightness('+(br||.8)+')':''})},
+    focus:on=>cur.el.classList.toggle('focus',on),
     IP:(fx,fy)=>{const iw=720,ih=1284,sc=Math.max(W/iw,H/ih),mw=iw*sc,mh=ih*sc;return{x:(W-mw)/2+fx*mw,y:(H-mh)*.4+fy*mh}},
     msgs:[],say(t,x,y,c){this.msgs.push({t,x,y,age:0,c:c||'#fff'})},
     drawMsgs(dt){const m=this.msgs;for(let i=m.length-1;i>=0;i--){const o=m[i];o.age+=dt;if(o.age>1.8){m.splice(i,1);continue}const a=Math.min(1,(1.8-o.age)*2);cx.globalAlpha=a;cx.font='400 '+Math.round(W*.068)+'px Jua,sans-serif';cx.textAlign='center';cx.lineWidth=6*W/430;cx.strokeStyle='rgba(20,10,30,.75)';cx.strokeText(o.t,o.x,o.y-o.age*30);cx.fillStyle=o.c;cx.fillText(o.t,o.x,o.y-o.age*30);cx.globalAlpha=1}}}};
@@ -300,9 +302,9 @@ SC.song=()=>{let K,n=0,count=0,state='ritual',dr=[],rip=[],evT=-1,amt=0,hold=nul
   const splash=(x,y,k,sp)=>{for(let i=0;i<k;i++){const a=R(-3.0,-.15),v=R(80,sp)*W/430;dr.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,r:R(2,4.5)*W/430,age:0,l:R(.5,1.1)})}rip.push({x,y,age:0})};
   const water=()=>{noise(.35,'highpass',2400,.18);noise(.2,'bandpass',900,.1)};
   function startRitual(){state='ritual';amt=0;K.stage(true);K.label('어른 손 바로 위를 꾹 · 천천히 부어요');K.bar(0);meter('롯남담후아');K.banner('어른께 물 붓기',true)}
-  function bless(){state='bless';hold=null;gar={t:0};K.banner('꽃목걸이를 드려요',true);K.later(()=>K.banner('축복을 받았어요',true),1500);[0,4,7,12].forEach((k,i)=>tone(659.3*Math.pow(2,k/12),i*.14,1.8,.07));vib([20,40,20]);
-    K.later(()=>{for(let i=0;i<36;i++)pet.push({x:R(0,W),y:R(-H*.6,-10),vy:R(50,110),ph:R(0,6),r:R(4,6)*W/430,rot:R(0,6)});K.say('올 한 해 건강하고 행복하렴',W/2,H*.3,'#fffbe8')},1500);
-    K.later(()=>{K.stage(false);gar=null;state='idle';K.label('눌러서 물을 뿌려요');K.bar(0);meter('뿌린 물 0');K.banner('이제 거리로!')},5600)}
+  function bless(){state='bless';hold=null;gar={t:0};K.dof(3.5,.7);K.focus(true);K.banner('꽃목걸이를 드려요',true);K.later(()=>K.banner('축복을 받았어요',true),2700);[0,4,7,12].forEach((k,i)=>tone(659.3*Math.pow(2,k/12),i*.14,1.8,.07));vib([20,40,20]);
+    K.later(()=>{for(let i=0;i<36;i++)pet.push({x:R(0,W),y:R(-H*.6,-10),vy:R(50,110),ph:R(0,6),r:R(4,6)*W/430,rot:R(0,6)});K.say('올 한 해 건강하고 행복하렴',W/2,H*.3,'#fffbe8')},2700);
+    K.later(()=>{K.stage(false);gar=null;state='idle';K.label('눌러서 물을 뿌려요');K.bar(0);meter('뿌린 물 0');K.banner('이제 거리로!')},6600)}
   function fire(){if(state!=='idle')return;const ve=K.q('video.ve');if(!ve)return;state='event';
     try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');evT=0;vib([30,30,30,30,60]);
     [0,5,9,12,16].forEach((k,i)=>tone(587.3*Math.pow(2,k/12),i*.09,1.2,.07));noise(1.4,'highpass',3000,.15);K.banner('물싸움 시작!');
@@ -327,7 +329,10 @@ SC.song=()=>{let K,n=0,count=0,state='ritual',dr=[],rip=[],evT=-1,amt=0,hold=nul
       K.bar(amt);if(amt>=1)bless()}
     for(let i=pet.length-1;i>=0;i--){const p=pet[i];p.y+=p.vy*dt;p.x+=Math.sin(t*1.5+p.ph)*.5;if(p.y>H+20){pet.splice(i,1);continue}
       cx.save();cx.translate(p.x,p.y);cx.rotate(t*.8+p.rot);const bg=cx.createRadialGradient(-p.r*.25,-p.r*.4,0,0,0,p.r*1.1);bg.addColorStop(0,'#fffef6');bg.addColorStop(.7,'#f1ead2');bg.addColorStop(1,'#d9cfa6');cx.fillStyle=bg;cx.beginPath();cx.ellipse(0,0,p.r*.55,p.r,0,0,7);cx.fill();cx.fillStyle='rgba(150,170,90,.8)';cx.beginPath();cx.ellipse(0,p.r*.92,p.r*.18,p.r*.16,0,0,7);cx.fill();cx.restore()}
-    if(gar&&okI(JAS)){gar.t+=dt;const k=Math.min(1,gar.t/1.2),e=1-Math.pow(1-k,3),gw=W*.3,gh=gw*JAS.naturalHeight/JAS.naturalWidth,gy=H*1.05+(H*.585-H*1.05)*e,a=state==='bless'?1:0;cx.save();cx.globalAlpha=Math.min(1,gar.t*2);cx.translate(W/2,gy);cx.rotate(Math.sin(gar.t*2)*.04*(1-k)+.02);cx.shadowColor='rgba(0,0,0,.3)';cx.shadowBlur=14;cx.drawImage(JAS,-gw/2,-gh/2,gw,gh);cx.restore();if(k>=1&&!gar.c){gar.c=1;chime();vib(15)}}
+    if(gar&&okI(JAS)){gar.t+=dt;const T=gar.t,inK=1-Math.pow(1-Math.min(1,T/.9),3),outK=Math.max(0,Math.min(1,(T-1.9)/.9)),oe=outK*outK;
+      const gw=W*(.62-.44*oe),gh=gw*JAS.naturalHeight/JAS.naturalWidth,gy=H*1.15+(H*.74-H*1.15)*inK+(H*.56-H*.74)*oe,al=Math.min(1,T*3)*(1-oe);
+      if(al>0){cx.save();cx.globalAlpha=al;cx.translate(W/2,gy+Math.sin(T*2.2)*W*.006);cx.rotate(Math.sin(T*1.6)*.03);cx.shadowColor='rgba(0,0,0,.45)';cx.shadowBlur=30;cx.shadowOffsetY=12;cx.drawImage(JAS,-gw/2,-gh/2,gw,gh);cx.restore()}
+      if(T>1.9&&!gar.c){gar.c=1;K.dof(0);K.focus(false);chime();vib(15)}if(outK>=1&&!gar.d){gar.d=1;add(cx,'lighter');}}
     if(evT>=0){evT+=dt;if(evT<4.5){if(Math.random()<dt*4)splash(R(0,W),R(H*.15,H*.75),16,420)}else evT=-1}
     for(let i=rip.length-1;i>=0;i--){const r=rip[i];r.age+=dt;if(r.age>.8){rip.splice(i,1);continue}const k=r.age/.8;cx.strokeStyle='rgba(225,248,255,'+(1-k)*.7+')';cx.lineWidth=2*W/430;cx.beginPath();cx.ellipse(r.x,r.y,W*.13*k,W*.05*k,0,0,7);cx.stroke()}
     for(let i=dr.length-1;i>=0;i--){const d=dr[i];d.age+=dt;if(d.age>d.l){dr.splice(i,1);continue}d.vy+=900*dt*W/430;d.x+=d.vx*dt;d.y+=d.vy*dt;const a=Math.min(1,(d.l-d.age)*3);
