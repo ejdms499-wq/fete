@@ -38,7 +38,7 @@ FEST.forEach((f,i)=>{const el=document.createElement('div');el.className='world'
   if(!f.locked&&VID[f.id]){const v=VID[f.id];
     const mk=(cls,files)=>{const x=document.createElement('video');x.className=cls;x.muted=true;x.defaultMuted=true;x.playsInline=true;x.setAttribute('playsinline','');x.setAttribute('muted','');x.preload='auto';if(cls==='vl')x.loop=true;files.forEach(([src,type])=>{const s=document.createElement('source');s.src=src;s.type=type;x.appendChild(s)});return x};
     const vl=mk('vl',v.loop),ve=mk('ve',v.event);const im=el.querySelector('img.bg');im.after(vl);vl.after(ve);
-    el.querySelector('.cap').insertAdjacentHTML('afterbegin','<div class="gauge"><span>눌러서 등불을 모아요</span><b><i></i></b></div>');
+    el.querySelector('.cap').insertAdjacentHTML('afterbegin','<div class="gauge"><span>누르거나 폰을 흔들어 모아요</span><b><i></i></b></div>');
     el.insertAdjacentHTML('beforeend','<div class="banner">대점등</div>')}
   track.appendChild(el);worlds.push(w);const t=document.createElement('div');t.className='tick';$('#ticks').appendChild(t)});
 function fit(w){if(!w.cv)return;const r=w.cv.getBoundingClientRect();D=Math.min(devicePixelRatio||1,2);W=Math.max(10,r.width);H=Math.max(10,r.height);w.cv.width=Math.ceil(W*D);w.cv.height=Math.ceil(H*D);cx=w.cv.getContext('2d');cx.setTransform(D,0,0,D,0,0)}
@@ -51,6 +51,7 @@ function activate(n,instant){idx=Math.max(0,Math.min(worlds.length-1,n));cur=wor
     seen[f.id]=1;saveSeen();renderDots();$('#blur').style.backgroundImage='url('+IMG[f.id]+')'}
   else{$('#blur').style.backgroundImage='none'}
   worlds.forEach((w,i)=>{if(w.cv&&i!==idx){w.cv.getContext('2d').clearRect(0,0,w.cv.width,w.cv.height)}});
+  window.onWorld&&window.onWorld(cur.f.id);
   worlds.forEach((w,i)=>{const vl=w.el.querySelector('video.vl');if(vl){if(i===idx){const p=vl.play();p&&p.catch&&p.catch(()=>{})}else vl.pause()}});
   lastAct=performance.now()}
 function loop(t){const dt=Math.min((t-last)/1000,.05);last=t;

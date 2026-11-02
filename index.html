@@ -25,6 +25,30 @@
   </div>
   <div class="ticks" id="ticks"></div>
   <div class="hint" id="hint"><div class="ring"></div>눌러보세요<br><span style="opacity:.8;font-size:12px">위로 쓸면 다음 축제</span></div>
+  <div id="lanUI" hidden>
+    <div class="lanTop"><i class="pulse"></i><div><b id="cd">--:--:--</b><small>매일 밤 9시 대점등 · 한국 시간</small></div></div>
+    <button class="pill" id="motionBtn" hidden>폰 움직임 켜기</button>
+    <button class="pill send" id="sendBtn">친구에게 등불 보내기</button>
+  </div>
+  <div id="toast" role="status"></div>
+  <div id="sheet" class="sheet" hidden>
+    <div class="sheetbox">
+      <div id="sForm">
+        <div class="st">친구에게 등불 보내기</div>
+        <p class="sp">링크를 열면 하늘에 내 등불이 떠올라요.</p>
+        <label>내 이름<input id="sName" maxlength="10" autocomplete="off"></label>
+        <label>한마디 (비워도 돼요)<input id="sMsg" maxlength="20" placeholder="예: 오늘도 수고했어요" autocomplete="off"></label>
+        <div class="sbtns"><button id="sGo" class="go">링크 만들기</button><button id="sClose">닫기</button></div>
+      </div>
+      <div id="sDone" hidden>
+        <div class="st">등불을 띄웠어요</div>
+        <p class="sp">이 링크를 친구에게 보내세요.</p>
+        <input id="sLink" readonly aria-label="링크">
+        <div class="sbtns"><button id="sShare" class="go">공유하기</button><button id="sCopy">링크 복사</button><button id="sClose2">닫기</button></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <section id="gacha" aria-label="오늘의 축제 뽑기">
@@ -43,5 +67,6 @@
 <script src="js/core.js"></script>
 <script src="js/scenes.js"></script>
 <script src="js/gacha.js"></script>
+<script src="js/lantern.js"></script>
 </body>
 </html>

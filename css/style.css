@@ -121,3 +121,29 @@ body,button,input{font-family:var(--sans)}
 .banner{position:absolute;left:0;right:0;top:34%;text-align:center;font-family:var(--ko);font-size:clamp(52px,16vw,76px);color:#fff;opacity:0;pointer-events:none;z-index:6;text-shadow:0 0 22px #ffb347,0 0 50px #ff8a30}
 .banner.show{animation:ban 2.8s ease forwards}
 @keyframes ban{0%{opacity:0;transform:scale(.8)}18%{opacity:1;transform:scale(1)}72%{opacity:1}100%{opacity:0;transform:scale(1.06)}}
+/* 이펭 전용 화면 */
+#lanUI{position:absolute;inset:0;z-index:11;pointer-events:none}
+#lanUI[hidden]{display:none}
+.lanTop{position:absolute;left:16px;top:calc(62px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px;padding:8px 14px 8px 12px;border-radius:99px;background:rgba(10,6,16,.48);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.25);color:#fff}
+.lanTop b{display:block;font-family:var(--ko);font-weight:400;font-size:17px;line-height:1.1;letter-spacing:.02em}
+.lanTop small{display:block;font-size:10px;opacity:.8;margin-top:2px}
+.pulse{width:9px;height:9px;border-radius:50%;background:#ffb347;box-shadow:0 0 10px #ffb347;animation:pl 1.6s infinite}
+@keyframes pl{50%{opacity:.3;transform:scale(.7)}}
+.pill{position:absolute;pointer-events:auto;border:1px solid rgba(255,255,255,.7);background:rgba(255,230,245,.2);backdrop-filter:blur(8px);color:#fff;border-radius:99px;padding:9px 16px;font-size:13px;font-weight:400}
+.pill.send{right:16px;bottom:calc(196px + env(safe-area-inset-bottom))}
+#motionBtn{left:16px;top:calc(112px + env(safe-area-inset-top))}
+#motionBtn[hidden]{display:none}
+#toast{position:absolute;left:50%;top:calc(120px + env(safe-area-inset-top));transform:translate(-50%,-8px);z-index:25;background:rgba(10,6,16,.78);backdrop-filter:blur(8px);color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;opacity:0;transition:.4s;pointer-events:none;white-space:nowrap;max-width:92%}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.sheet{position:absolute;inset:0;z-index:24;background:rgba(5,3,10,.6);display:flex;align-items:flex-end}
+.sheet[hidden]{display:none}
+.sheetbox{width:100%;background:#1a1224;border-radius:22px 22px 0 0;padding:22px 20px calc(24px + env(safe-area-inset-bottom));color:#fff}
+.st{font-family:var(--ko);font-size:22px;margin-bottom:4px}
+.sp{font-size:13px;color:#cdbfdc;margin-bottom:14px}
+.sheetbox label{display:block;font-size:12px;color:#cdbfdc;margin-bottom:10px}
+.sheetbox input{display:block;width:100%;margin-top:5px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;font:inherit;font-size:16px}
+.sbtns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.sbtns button{padding:12px 18px;border-radius:99px;border:1px solid rgba(255,255,255,.35);font-size:14px;color:#fff;text-align:center}
+.sbtns .go{background:var(--paper);color:#150f0a;border-color:var(--paper)}
+.banner{white-space:nowrap}
+.banner.sync{font-size:clamp(34px,10.5vw,50px)}
