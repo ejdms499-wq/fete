@@ -158,18 +158,18 @@ SC.tom=()=>{
   function noon(){st='ham';ham=null;say('정오! 햄 없이도 시작해요',W/2,H*.4,'#ffe08a');later(()=>{rocket();later(startBattle,1300)},900)}
   /* 대전 */
   let BT=0,thrown=0,hit=0,hold=null,fly=[],inc=[],incT=1.5,spl=[],bits=[];const BATTLE=25;
-  let dA=1,dirt=null,dx=null,startDirt=1,water=[],lastP=null,chk=0;
+  let scrubbed=0,dA=1,dirt=null,dx=null,startDirt=1,water=[],lastP=null,chk=0;
   function mkDirt(){dirt=document.createElement('canvas');dirt.width=Math.ceil(W);dirt.height=Math.ceil(H);dx=dirt.getContext('2d')}
   function paint(x,y,r){const g=dx;const big=TSPL[Math.floor(R(0,7))];if(okI(big)){const n=3;for(let k=0;k<n;k++){const im=k?TSPL[Math.floor(R(0,7))]:big,sz=k?r*R(.35,.55):r*R(1.25,1.55),px=x+(k?R(-1,1)*r*.9:0),py=y+(k?R(-1,1)*r*.8:0);g.save();g.translate(px,py);g.rotate(R(0,6.3));g.drawImage(im,-sz/2,-sz/2,sz,sz*im.naturalHeight/im.naturalWidth);g.restore()}return}
     for(let k=0;k<8;k++){const px=x+R(-.5,.5)*r,py=y+R(-.45,.45)*r,rr=R(.25,.55)*r;const gr=g.createRadialGradient(px,py,0,px,py,rr);gr.addColorStop(0,'rgba(222,40,22,.95)');gr.addColorStop(1,'rgba(196,30,18,0)');g.fillStyle=gr;g.fillRect(px-rr,py-rr,rr*2,rr*2)}}
-  function measure(){const s=24,t=document.createElement('canvas');t.width=s;t.height=Math.round(s*H/W);const g=t.getContext('2d');g.drawImage(dirt,0,0,t.width,t.height);const d=g.getImageData(0,0,t.width,t.height).data;let a=0;for(let i=3;i<d.length;i+=4)a+=d[i];return a/(d.length/4*255)}
+  function measure(){const s=24,t=document.createElement('canvas');t.width=s;t.height=Math.round(s*H/W);const g=t.getContext('2d');g.drawImage(dirt,0,0,t.width,t.height);let d;try{d=g.getImageData(0,0,t.width,t.height).data}catch(e){return Math.max(0,.6-scrubbed/(W*H*1.6))}let a=0;for(let i=3;i<d.length;i+=4)a+=d[i];return a/(d.length/4*255)}
   function burst(x,y,k){for(let i=0;i<k;i++){const a=R(0,6.283),s=R(90,380)*W/430;bits.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-120*W/430,r:R(2.5,6)*W/430,l:R(.45,.9),age:0})}}
   function playVe(){const ve=q('video.ve');if(!ve)return;try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');
     let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);const vl=q('video.vl');if(vl){const p2=vl.play();p2&&p2.catch&&p2.catch(()=>{})}ve.classList.add('hold');ve.classList.remove('on');later(()=>{ve.pause();ve.classList.remove('hold')},3000)};
     ve.addEventListener('ended',done);later(done,8000)}
   function startBattle(){const sg=q('img.stage');if(sg){sg.classList.remove('on');later(()=>{sg.style.transform=''},1300)}st='battle';BT=0;thrown=0;hit=0;hold=null;fly=[];inc=[];incT=1.6;mkDirt();banner('토마토 대전!');label('꾹 눌러 으깨고, 놓아서 던져요');playVe()}
   function endBattle(){st='end';rocket();for(let i=0;i<14;i++)paint(R(0,W),R(H*.08,H*.9),R(.12,.22)*W);later(()=>{banner('끝! 소방차 출동');siren();startClean()},1300)}
-  function startClean(){st='clean';startDirt=Math.max(.05,measure());label('손가락으로 문질러 거리를 씻어요');bar(1);meter('던진 '+thrown+' · 맞은 '+hit)}
+  function startClean(){st='clean';scrubbed=0;startDirt=Math.max(.05,measure());label('손가락으로 문질러 거리를 씻어요');bar(1);meter('던진 '+thrown+' · 맞은 '+hit)}
   function finish(){st='done';banner('깨끗!');chime();vib([20,40,20]);label('오늘 던진 토마토 '+thrown+'개 · 맞은 토마토 '+hit+'개');bar(0);
     later(()=>{dirt=null;st='idle';label(IDLE_LABEL)},4200)}
   /* 그리기 도우미 */
@@ -185,7 +185,7 @@ SC.tom=()=>{
   scrub(x,y,first){
     if(st==='pole'){if(first)climb();return}
     if(st==='battle'){if(first){hold={x,y,sq:0,snd:false}}else if(hold){hold.x=x;hold.y=y}return}
-    if(st==='clean'&&dirt){const p=lastP&&!first?lastP:{x,y};const r=W*.12;dx.globalCompositeOperation='destination-out';dx.lineCap='round';dx.lineWidth=r*2;dx.beginPath();dx.moveTo(p.x,p.y);dx.lineTo(x,y);dx.stroke();dx.globalCompositeOperation='source-over';
+    if(st==='clean'&&dirt){const p=lastP&&!first?lastP:{x,y};const r=W*.12;scrubbed+=Math.hypot(x-p.x,y-p.y)*r*2;dx.globalCompositeOperation='destination-out';dx.lineCap='round';dx.lineWidth=r*2;dx.beginPath();dx.moveTo(p.x,p.y);dx.lineTo(x,y);dx.stroke();dx.globalCompositeOperation='source-over';
       for(let k=0;k<5;k++)water.push({x:x+R(-r,r)*.6,y:y+R(-r,r)*.6,vx:R(-160,160)*W/430,vy:R(-220,-40)*W/430,r:R(2,4.5)*W/430,l:R(.35,.7),age:0});
       lastP={x,y};const t=performance.now();if(t-chk>120){chk=t;noise(.12,'highpass',2600,.08)}}},
   release(x,y){lastP=null;if(st!=='battle'||!hold)return;const hd=hold;hold=null;
