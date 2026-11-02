@@ -1,4 +1,16 @@
 const okI=m=>m&&m.complete&&m.naturalWidth;
+/* ---------- 팡! 정면으로 터지는 영상 ---------- */
+function mkBurst(key,id){const el=cur.el;let v=el.querySelector('video.vb[data-k="'+key+'"]');if(v||!VID[id]||!VID[id][key])return v;
+  v=document.createElement('video');v.className='vb';v.dataset.k=key;v.muted=true;v.defaultMuted=true;v.playsInline=true;v.setAttribute('playsinline','');v.setAttribute('muted','');v.preload='auto';
+  VID[id][key].forEach(([s,t])=>{const so=document.createElement('source');so.src=s;so.type=t;v.appendChild(so)});el.querySelector('canvas').before(v);return v}
+function burstVideo(key,id,peaks,done){const v=mkBurst(key,id);if(!v){(peaks||[]).forEach(p=>p[1]());done&&done();return}
+  try{v.currentTime=0}catch(e){}const p=v.play();p&&p.catch&&p.catch(()=>{});v.classList.remove('out');v.classList.add('on');
+  const ps=(peaks||[]).slice();let fin=false;const iv=setInterval(()=>{while(ps.length&&v.currentTime>=ps[0][0])ps.shift()[1]()},40);
+  const end=()=>{if(fin)return;fin=true;clearInterval(iv);while(ps.length)ps.shift()[1]();v.classList.add('out');v.classList.remove('on');setTimeout(()=>{v.pause();v.classList.remove('out')},1100);done&&done()};
+  v.addEventListener('ended',end,{once:true});setTimeout(end,9000)}
+function jolt(){const el=cur.el;el.classList.remove('jolt');void el.offsetWidth;el.classList.add('jolt')}
+function boom(){noise(1.1,'lowpass',160,.9);noise(.5,'bandpass',700,.35);tone(55,0,1.2,.12,'sine')}
+function whoosh(){noise(.7,'bandpass',1200,.25);noise(.5,'highpass',3000,.12)}
 const NOTE=new Image();NOTE.src='img/props/note.png';const CALA=new Image();CALA.src='img/props/calaverita.jpg';
 /* ---------- 이펭: 꾹 눌러 뜨거운 공기 채우기 → 손 떼서 띄우기 → 불이 꺼지기 전에 사라지면 행운 → 대점등 ---------- */
 const LSPR=new Image();LSPR.src='img/lantern.png';const LMASK=new Image();LMASK.src='img/yi-peng-mask.png';
@@ -87,7 +99,7 @@ SC.dead=()=>{let K,n=0,count=0,state='idle',glows=[],pt=[],sp=[],evT=-1,B0='',G0
   function lightC(c){c.on=1;lit++;hole(c.x,c.y,W*.2,.9);flame();tone(523.25*Math.pow(2,[0,2,4,7,9,12,14][lit-1]/12),0,1.4,.06);motes(c.x,c.y,10,W*.02);vib(10);
     K.bar(lit/C.length);meter('켠 촛불 '+lit+'/'+C.length);
     if(lit>=C.length){K.banner('제단이 밝아졌어요',true);K.label('');K.later(()=>{state='path';K.bar(0);K.label('금빛 점을 손가락으로 끌어 꽃잎 길을 제단까지 이어요');tone(392,0,2,.05)},1500)}}
-  function arrive(){state='arrive';tT=0;chime();vib([20,40,20]);K.banner('영혼이 돌아와요',true);K.label('멕시코에선 제왕나비를 돌아온 영혼이라 믿어요');meter('영혼의 길');K.bar(1);
+  function arrive(){state='arrive';tT=0;chime();vib([20,40,20]);K.later(()=>{whoosh();vib([30,30,60])},2400);K.later(()=>{noise(1.6,'bandpass',2200,.12);jolt();vib([60,40,100])},3400);K.banner('영혼이 돌아와요',true);K.label('멕시코에선 제왕나비를 돌아온 영혼이라 믿어요');meter('영혼의 길');K.bar(1);
     K.later(()=>{const vt=q('video.vt');if(vt){try{vt.currentTime=0}catch(e){}const p=vt.play();p&&p.catch&&p.catch(()=>{});vt.classList.add('on');
       let fin=false;const done=()=>{if(fin)return;fin=true;vt.removeEventListener('ended',done);vt.classList.remove('on');K.later(()=>vt.pause(),1700);showPoem()};vt.addEventListener('ended',done);K.later(done,8000)}else showPoem()},900)}
   function showPoem(){state='poem';poem=0;K.label('칼라베리타: 죽음을 웃으며 놀리는 짧은 시');[0,4,7,4,0].forEach((k,i)=>tone(523.25*Math.pow(2,k/12),i*.22,.6,.05,'triangle'));
@@ -154,7 +166,7 @@ SC.tom=()=>{
   const geo=()=>({px:W*.5,top:H*.17,bot:H*.9,pw:W*.09});
   function startPole(){const sg=q('img.stage');if(sg){sg.style.transition='opacity 1.2s ease';sg.classList.add('on')}st='pole';h=0;v=0;poleT=0;hoseT=2;spray=[];ham=null;banner('팔로 하본!');label('연타해서 올라가요 · 멈추면 미끄러져요');bar(0);meter('높이 0%')}
   function climb(){v+=.12;hug=1;tone(520+h*500,0,.07,.04,'triangle')}
-  function grab(){st='ham';ham=null;msgs.length=0;flash=.8;banner('햄을 땄어요!');chime();vib([20,40,20]);later(()=>{thud();shake();later(()=>{rocket();later(startBattle,1300)},500)},900)}
+  function grab(){st='ham';ham=null;msgs.length=0;flash=.8;banner('햄을 땄어요!');chime();vib([20,40,20]);later(()=>{thud();shake();later(()=>{rocket();later(tomBurst,900)},500)},900)}
   function noon(){st='ham';ham=null;say('정오! 햄 없이도 시작해요',W/2,H*.4,'#ffe08a');later(()=>{rocket();later(startBattle,1300)},900)}
   /* 대전 */
   let BT=0,thrown=0,hit=0,hold=null,fly=[],inc=[],incT=1.5,spl=[],bits=[];const BATTLE=25;
@@ -167,7 +179,9 @@ SC.tom=()=>{
   function playVe(){const ve=q('video.ve');if(!ve)return;try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');
     let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);const vl=q('video.vl');if(vl){const p2=vl.play();p2&&p2.catch&&p2.catch(()=>{})}ve.classList.add('hold');ve.classList.remove('on');later(()=>{ve.pause();ve.classList.remove('hold')},3000)};
     ve.addEventListener('ended',done);later(done,8000)}
-  function startBattle(){const sg=q('img.stage');if(sg){sg.classList.remove('on');later(()=>{sg.style.transform=''},1300)}st='battle';BT=0;thrown=0;hit=0;hold=null;fly=[];inc=[];incT=1.6;mkDirt();banner('토마토 대전!');label('꾹 눌러 으깨고, 놓아서 던져요');playVe()}
+  function tomBurst(){st='burst';const sg=q('img.stage');if(sg){sg.classList.remove('on');sg.style.transform=''}if(!dirt)mkDirt();label('');
+    burstVideo('burst','tom',[[.9,()=>whoosh()],[1.55,()=>{boom();jolt();vib([90,40,160]);banner('철퍽!');paint(W*.5,H*.45,W*.42);paint(W*R(.2,.35),H*R(.25,.4),W*.22);paint(W*R(.65,.8),H*R(.55,.7),W*.2)}]],startBattle)}
+  function startBattle(){const sg=q('img.stage');if(sg){sg.classList.remove('on');later(()=>{sg.style.transform=''},1300)}st='battle';BT=0;thrown=0;hit=0;hold=null;fly=[];inc=[];incT=1.6;if(!dirt)mkDirt();banner('토마토 대전!');label('꾹 눌러 으깨고, 놓아서 던져요');playVe()}
   function endBattle(){st='end';rocket();for(let i=0;i<14;i++)paint(R(0,W),R(H*.08,H*.9),R(.12,.22)*W);later(()=>{banner('끝! 소방차 출동');siren();startClean()},1300)}
   function startClean(){st='clean';scrubbed=0;startDirt=Math.max(.05,measure());label('손가락으로 문질러 거리를 씻어요');bar(1);meter('던진 '+thrown+' · 맞은 '+hit)}
   function finish(){st='done';banner('깨끗!');chime();vib([20,40,20]);label('오늘 던진 토마토 '+thrown+'개 · 맞은 토마토 '+hit+'개');bar(0);
@@ -179,7 +193,7 @@ SC.tom=()=>{
     cx.fillStyle='rgba(255,220,190,.55)';cx.beginPath();cx.ellipse(-s*.12,s*.05,s*.15,s*.45,-.2,0,7);cx.fill();cx.fillStyle='#f1e6d0';cx.fillRect(-s*.09,-s*.75,s*.18,s*.4);cx.beginPath();cx.arc(-s*.09,-s*.78,s*.1,0,7);cx.arc(s*.09,-s*.78,s*.1,0,7);cx.fill();cx.restore()}
   let pan=0;function drawPole(t){const sg=q('img.stage');pan+=(Math.min(1,h)-pan)*Math.min(1,dt_*6);const ty=(-.225+.45*pan)*H;if(sg)sg.style.transform='translateY('+ty.toFixed(1)+'px) scale(1.45)'}
   let dt_=0;
-  return{init(){st='idle';pan=0;msgs=[];timers.forEach(clearTimeout);timers=[];dirt=null;bar(0);label(IDLE_LABEL)},
+  return{init(){mkBurst('burst','tom');st='idle';pan=0;msgs=[];timers.forEach(clearTimeout);timers=[];dirt=null;bar(0);label(IDLE_LABEL)},
   wants(){return st==='pole'||st==='battle'||st==='clean'},
   tap(x,y){if(st==='idle')startPole()},
   scrub(x,y,first){
@@ -223,7 +237,10 @@ SC.burn=()=>{let K,n=0,count=0,state='idle',sp=[],evT=-1,G0='',B0='',card=null,i
   const q=sel=>cur.el.querySelector(sel);
   const emb=(x,y,k)=>{for(let i=0;i<k;i++){const a=R(-2.7,-.45),v=R(50,170)*W/430;sp.push({x,y,vx:Math.cos(a)*v*.7,vy:Math.sin(a)*v,r:R(2.5,5)*W/430,l:R(1,2.2),age:0,ph:R(0,6),dust:Math.random()<.35})}};
   const rise=(x,y,k,spread)=>{for(let i=0;i<k;i++)sp.push({x:x+R(-1,1)*spread,y:y+R(-1,1)*spread*.5,vx:R(-12,12)*W/430,vy:-R(30,80)*W/430,r:R(2,4)*W/430,l:R(1.8,3.4),age:0,ph:R(0,6),dust:false})};
-  function fire(){if(state!=='idle')return;const ve=q('video.ve');if(!ve)return;state='event';
+  function fire(){if(state!=='idle')return;state='fireworks';K.banner('불꽃놀이!',true);K.label('맨이 타기 전, 하늘이 먼저 터져요');
+    const pop=()=>{noise(.5,'lowpass',220,.7);K.later(()=>noise(.9,'highpass',4000,.14),120);vib(30)};
+    burstVideo('fireworks','burn',[[.75,pop],[1.5,()=>{pop();jolt()}],[2.3,pop],[3.1,()=>{pop();boom();jolt()}]],burnMan)}
+  function burnMan(){const ve=q('video.ve');if(!ve){state='idle';return}state='event';
     try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');evT=0;vib([40,40,80]);
     [0,3,7,10].forEach((k,i)=>tone(196*Math.pow(2,k/12),i*.25,2.6,.07,'triangle'));noise(4,'lowpass',500,.12);noise(2.4,'bandpass',1400,.08);
     K.banner(B0);
@@ -255,7 +272,7 @@ SC.burn=()=>{let K,n=0,count=0,state='idle',sp=[],evT=-1,G0='',B0='',card=null,i
     cx.drawImage(ink,-c.w/2,-c.h/2,c.w,c.h);
     if(c.burn>0){cx.globalCompositeOperation='source-atop';cx.fillStyle='rgba(255,'+Math.round(150-c.burn*90)+',40,'+(c.burn*.8)+')';cx.fillRect(-c.w/2,-c.h/2,c.w,c.h);cx.globalCompositeOperation='source-over'}
     cx.restore()}
-  return{init(){K=ritualKit();K.clear();n=0;count=0;state='idle';sp=[];evT=-1;card=null;K.bar(0);
+  return{init(){K=ritualKit();K.clear();mkBurst('fireworks','burn');n=0;count=0;state='idle';sp=[];evT=-1;card=null;K.bar(0);
     const sp_=q('.gauge span'),bn=q('.banner');if(sp_&&!G0)G0=sp_.textContent;if(bn&&!B0)B0=bn.textContent;
     if(!q('video.vt')&&VID.burn.temple){const x=document.createElement('video');x.className='vt';x.muted=true;x.defaultMuted=true;x.playsInline=true;x.setAttribute('playsinline','');x.setAttribute('muted','');x.preload='auto';
       VID.burn.temple.forEach(([src,type])=>{const s=document.createElement('source');s.src=src;s.type=type;x.appendChild(s)});q('canvas').before(x)}},
@@ -304,14 +321,16 @@ SC.song=()=>{let K,n=0,count=0,state='ritual',dr=[],rip=[],evT=-1,amt=0,hold=nul
   function startRitual(){state='ritual';amt=0;K.stage(true);K.label('어른 손 바로 위를 꾹 · 천천히 부어요');K.bar(0);meter('롯남담후아');K.banner('어른께 물 붓기',true)}
   function bless(){state='bless';hold=null;gar={t:0};K.dof(3.5,.7);K.focus(true);K.banner('꽃목걸이를 드려요',true);K.later(()=>K.banner('축복을 받았어요',true),2700);[0,4,7,12].forEach((k,i)=>tone(659.3*Math.pow(2,k/12),i*.14,1.8,.07));vib([20,40,20]);
     K.later(()=>{for(let i=0;i<36;i++)pet.push({x:R(0,W),y:R(-H*.6,-10),vy:R(50,110),ph:R(0,6),r:R(4,6)*W/430,rot:R(0,6)});K.say('올 한 해 건강하고 행복하렴',W/2,H*.3,'#fffbe8')},2700);
-    K.later(()=>{K.stage(false);gar=null;state='idle';K.label('눌러서 물을 뿌려요');K.bar(0);meter('뿌린 물 0');K.banner('이제 거리로!')},6600)}
+    K.later(()=>{K.stage(false);gar=null;state='ambush';K.label('');K.bar(0);meter('뿌린 물 0');K.banner('이제 거리로!',true);
+      K.later(()=>burstVideo('burst','song',[[.9,()=>{whoosh();K.label('어? 위를 봐요!')}],[1.7,()=>{boom();noise(1.4,'highpass',2600,.3);jolt();vib([80,40,140]);K.banner('물벼락!');for(let i=0;i<5;i++)splash(R(W*.1,W*.9),R(H*.2,H*.7),18,380)}],[2.6,()=>{noise(.8,'highpass',3000,.18)}]],
+        ()=>{state='idle';K.label('눌러서 물을 뿌려요 · 맞받아쳐요!')}),1500)},6600)}
   function fire(){if(state!=='idle')return;const ve=K.q('video.ve');if(!ve)return;state='event';
     try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');evT=0;vib([30,30,30,30,60]);
     [0,5,9,12,16].forEach((k,i)=>tone(587.3*Math.pow(2,k/12),i*.09,1.2,.07));noise(1.4,'highpass',3000,.15);K.banner('물싸움 시작!');
     let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);const vl=K.q('video.vl');if(vl){try{vl.currentTime=0}catch(e){}const p2=vl.play();p2&&p2.catch&&p2.catch(()=>{})}
       ve.classList.add('hold');ve.classList.remove('on');tone(784,0,2.2,.04);K.later(()=>{ve.pause();ve.classList.remove('hold');state='idle';count=0;K.bar(0)},3000)};
     ve.addEventListener('ended',done);K.later(done,8000)}
-  return{init(){K=ritualKit();K.clear();n=0;count=0;dr=[];rip=[];pet=[];gar=null;evT=-1;startRitual()},
+  return{init(){K=ritualKit();K.clear();mkBurst('burst','song');n=0;count=0;dr=[];rip=[];pet=[];gar=null;evT=-1;startRitual()},
   wants(){return state==='ritual'},
   scrub(x,y,first){if(state!=='ritual')return;if(first){hold={x,y,t:0};warned=false}else if(hold){hold.x=x;hold.y=y}},
   release(){hold=null},
@@ -341,7 +360,7 @@ SC.song=()=>{let K,n=0,count=0,state='ritual',dr=[],rip=[],evT=-1,amt=0,hold=nul
 
 /* ---------- 홀리: 전날 밤 홀리카 모닥불 → 아침 → 친구 얼굴에 색 문지르기 → "부라 나 마노, 홀리 하이!" ---------- */
 const HMASK=new Image();HMASK.src='img/holi-friends-mask.png';
-SC.holi=()=>{let K,n=0,count=0,state='night',puffs=[],evT=-1,heat=0,sticks=[],emb=[],flare=0,dawn=0,pc=null,pg=null,tmp=null,painted=0,ci=0,last=null;const NEED=10;
+SC.holi=()=>{let hidePaint=false,K,n=0,count=0,state='night',puffs=[],evT=-1,heat=0,sticks=[],emb=[],flare=0,dawn=0,pc=null,pg=null,tmp=null,painted=0,ci=0,last=null;const NEED=10;
   const COL=['255,72,176','255,206,40','40,200,230','120,220,90','255,130,40','170,110,255'];
   const FIRE=()=>K.IP(.505,.72);
   const puff=(x,y,big,c)=>{c=c||COL[Math.floor(R(0,COL.length))];const k=big?10:7;for(let i=0;i<k;i++){const a=R(0,6.283),v=R(30,big?260:150)*W/430;puffs.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-40*W/430,r:R(14,big?50:30)*W/430,c,age:0,l:R(1.2,big?2.6:2.2)})}
@@ -352,16 +371,16 @@ SC.holi=()=>{let K,n=0,count=0,state='night',puffs=[],evT=-1,heat=0,sticks=[],em
     K.later(()=>{state='dawn';dawn=0},1800)}
   function startPaint(){state='paint';K.stage(false);pc=document.createElement('canvas');pc.width=Math.ceil(W);pc.height=Math.ceil(H);pg=pc.getContext('2d');tmp=document.createElement('canvas');tmp.width=pc.width;tmp.height=pc.height;painted=0;ci=0;
     K.banner('홀리 아침이에요',true);K.label('손가락으로 두 친구 얼굴에 색을 문질러요');K.bar(0);meter('색칠 0%')}
-  function throwback(){state='back';K.banner('부라 나 마노,\n홀리 하이!',true);K.say('화내지 마, 홀리잖아!',W/2,H*.3,'#fff');vib([30,30,60]);noise(.8,'bandpass',900,.3);
-    for(let i=0;i<7;i++)K.later(()=>{puff(R(W*.1,W*.9),R(H*.1,H*.55),true);noise(.3,'bandpass',800,.2)},i*230);
-    K.later(()=>{state='idle';count=0;K.label('눌러서 색 가루를 던져요');K.bar(0);meter('던진 가루 0')},3200)}
+  function throwback(){state='back';hidePaint=true;K.label('어? 친구들이…');K.bar(0);
+    burstVideo('burst','holi',[[1.0,()=>{whoosh();K.banner('부라 나 마노,\n홀리 하이!',true)}],[1.8,()=>{boom();jolt();vib([60,30,120]);K.say('화내지 마, 홀리잖아!',W/2,H*.3,'#fff')}],[2.9,()=>{noise(.6,'bandpass',900,.25);vib(40)}]],
+      ()=>{hidePaint=false;state='idle';count=0;K.label('눌러서 색 가루를 던져요');K.bar(0);meter('던진 가루 0')})}
   function fire(){if(state!=='idle')return;const ve=K.q('video.ve');if(!ve)return;state='event';
     try{ve.currentTime=0}catch(e){}const p=ve.play();p&&p.catch&&p.catch(()=>{});ve.classList.add('on');evT=0;vib([30,30,30,30,60]);
     [0,4,7,11,14].forEach((k,i)=>tone(440*Math.pow(2,k/12),i*.1,1.4,.08));noise(.8,'bandpass',1200,.25);K.banner('색의 폭발');
     let fin=false;const done=()=>{if(fin)return;fin=true;ve.removeEventListener('ended',done);const vl=K.q('video.vl');if(vl){try{vl.currentTime=0}catch(e){}const p2=vl.play();p2&&p2.catch&&p2.catch(()=>{})}
       ve.classList.add('hold');ve.classList.remove('on');tone(523.25,0,2.4,.05);K.later(()=>{ve.pause();ve.classList.remove('hold');state='idle';count=0;K.bar(0)},3000)};
     ve.addEventListener('ended',done);K.later(done,8000)}
-  return{init(){K=ritualKit();K.clear();puffs=[];sticks=[];emb=[];heat=0;flare=0;pc=null;state='night';K.stage(true);K.label('눌러서 마른 나뭇가지를 불에 던져요');K.bar(0);meter('홀리 전날 밤');K.banner('홀리 전날 밤',true)},
+  return{init(){K=ritualKit();K.clear();mkBurst('burst','holi');puffs=[];sticks=[];emb=[];heat=0;flare=0;pc=null;state='night';K.stage(true);K.label('눌러서 마른 나뭇가지를 불에 던져요');K.bar(0);meter('홀리 전날 밤');K.banner('홀리 전날 밤',true)},
   wants(){return state==='paint'},
   scrub(x,y,first){if(state!=='paint')return;if(first){ci=(ci+1)%COL.length;last=null;noise(.15,'bandpass',900,.12)}const c=COL[ci],p=last||{x,y},dist=Math.hypot(x-p.x,y-p.y),steps=Math.max(1,Math.ceil(dist/16));
     for(let s=0;s<=steps;s++){const px=p.x+(x-p.x)*s/steps,py=p.y+(y-p.y)*s/steps,r=W*R(.045,.07),ox=px+R(-1,1)*W*.012,oy=py+R(-1,1)*W*.012;const g=pg.createRadialGradient(ox,oy,0,ox,oy,r);g.addColorStop(0,'rgba('+c+',.2)');g.addColorStop(.6,'rgba('+c+',.08)');g.addColorStop(1,'rgba('+c+',0)');pg.fillStyle=g;pg.fillRect(ox-r,oy-r,r*2,r*2);
@@ -380,7 +399,7 @@ SC.holi=()=>{let K,n=0,count=0,state='night',puffs=[],evT=-1,heat=0,sticks=[],em
       cx.save();cx.translate(x,y);cx.rotate(s.rot+k*8);cx.strokeStyle='#6b4a2a';cx.lineCap='round';cx.lineWidth=4*W/430;cx.beginPath();cx.moveTo(-W*.03,0);cx.lineTo(W*.03,0);cx.moveTo(W*.01,0);cx.lineTo(W*.025,-W*.015);cx.stroke();cx.fillStyle='#8a6a2a';cx.beginPath();cx.ellipse(-W*.02,-W*.008,W*.008,W*.004,.4,0,7);cx.fill();cx.restore();
       if(s.t>=1){sticks.splice(i,1);heat=Math.min(1,heat+.1);count++;K.bar(heat);meter('던진 나뭇가지 '+count);crackle();for(let j=0;j<10;j++)emb.push({x:s.x1+R(-10,10),y:s.y1,vy:-R(120,260)*W/430,vx:R(-60,60),l:R(.6,1.4),age:0});if(heat>=.999&&state==='night')morning()}}
     if(state==='dawn'){dawn+=dt;const a=dawn<1.2?dawn/1.2:Math.max(0,1-(dawn-1.2)/1.2);cx.fillStyle='rgba(255,232,215,'+a+')';cx.fillRect(0,0,W,H);if(dawn>=1.2&&!pc)startPaint();if(dawn>2.4)state=state==='dawn'?'paint':state}
-    if(pc&&HMASK.complete&&HMASK.naturalWidth){const tg=tmp.getContext('2d');tg.globalCompositeOperation='source-over';tg.clearRect(0,0,tmp.width,tmp.height);tg.drawImage(pc,0,0);tg.globalCompositeOperation='destination-in';const sc=Math.max(W/360,H/646),mw=360*sc,mh=646*sc;tg.drawImage(HMASK,(W-mw)/2,(H-mh)*.4,mw,mh);cx.globalCompositeOperation='multiply';cx.globalAlpha=.9;cx.drawImage(tmp,0,0,W,H);cx.globalAlpha=1;cx.globalCompositeOperation='source-over'}
+    if(pc&&!hidePaint&&HMASK.complete&&HMASK.naturalWidth){const tg=tmp.getContext('2d');tg.globalCompositeOperation='source-over';tg.clearRect(0,0,tmp.width,tmp.height);tg.drawImage(pc,0,0);tg.globalCompositeOperation='destination-in';const sc=Math.max(W/360,H/646),mw=360*sc,mh=646*sc;tg.drawImage(HMASK,(W-mw)/2,(H-mh)*.4,mw,mh);cx.globalCompositeOperation='multiply';cx.globalAlpha=.9;cx.drawImage(tmp,0,0,W,H);cx.globalAlpha=1;cx.globalCompositeOperation='source-over'}
     if(state==='paint'&&dawn<2.4){dawn+=dt;const a=Math.max(0,1-(dawn-1.2)/1.2);cx.fillStyle='rgba(255,232,215,'+a+')';cx.fillRect(0,0,W,H)}
     if(evT>=0){evT+=dt;if(evT<4.5){if(Math.random()<dt*5)puff(R(0,W),R(H*.1,H*.6),true)}else evT=-1}
     for(let i=puffs.length-1;i>=0;i--){const p=puffs[i];p.age+=dt;if(p.age>p.l){puffs.splice(i,1);continue}p.vx*=.95;p.vy=p.vy*.95+(p.dot?260:14)*dt*W/430;p.x+=p.vx*dt;p.y+=p.vy*dt;const k=p.age/p.l,a=(1-k)*(p.dot?1:.55);
