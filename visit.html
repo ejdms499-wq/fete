@@ -103,6 +103,11 @@ canvas#fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
   #start{background-size:cover;background-position:center 45%}
   #end h2{font-size:38px}#end .mem{width:440px;padding:24px}#end .mem li{font-size:15px}
 }
+
+/* 그림은 절대 자르지 않기: 전체를 보여주고, 남는 곳은 같은 그림을 흐리게 */
+.layer img,.layer video{inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 50%;animation:none!important}
+#bd{display:block;position:absolute;inset:-8%;background:center/cover;filter:blur(40px) brightness(.4) saturate(1.2);transform:scale(1.1);transition:background-image 1.6s}
+@media (min-width:900px) and (min-aspect-ratio:1/1){.layer img,.layer video{object-fit:contain}}
 </style>
 </head>
 <body>
