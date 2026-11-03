@@ -82,7 +82,7 @@ holi:{id:'holi',en:'Holi',ko:'홀리',city:'India',title:'불을 피우고,<br>�
  {place:['Holi','다음 날 아침'],bg:'img/holi.jpg',fx:'powder',mask:'img/holi-friends-mask.png',lines:[
    {t:'아침이에요! 오늘만큼은 누구에게나 색을 묻혀도 돼요. 낯선 사람에게도, 어른에게도.'},
    {t:'이 색 가루는 ‘굴랄’이라고 불러요. 옛날엔 꽃과 풀로 물을 들였대요.'},
-   {t:'두 친구 얼굴에 색을 문질러 줘요.',g:{k:'rub',as:'powder',need:5,cue:'손가락으로 문질러요'}},
+   {t:'두 친구 얼굴에 색을 문질러 줘요.',g:{k:'rub',as:'powder',need:1.6,cue:'손가락으로 문질러요'}},
    {t:'어? 친구들이 반격한다—',burst:'video/holi-burst',auto:3800,clearPaint:true},
    {t:'“부라 나 마노, 홀리 하이!” 기분 나빠하지 마, 홀리잖아! 이 말이면 다 용서돼요.'},
    {t:'다 같이 색을 던지고 나면, 씻고 달콤한 과자 ‘구지야’를 나눠 먹어요.',vid:'video/holi-event'},
@@ -123,8 +123,8 @@ dead:{id:'dead',en:'Día de Muertos',ko:'죽은 자의 날',city:'México',title
    {t:'이건 ‘오프렌다’, 제단이에요. 할머니 사진이랑 좋아하시던 빵, 설탕 해골을 올려요.'},
    {t:'할머니가 길을 잃지 않게, 초를 켜 줘요.',g:{k:'tap',as:'candle',at:[[.235,.195],[.585,.19],[.135,.255],[.725,.255]],cue:'반짝이는 초를 톡톡'}},
    {t:'이 주황 꽃은 ‘셈파수칠’, 금잔화예요. 진한 색과 향이 영혼에게 집으로 오는 길을 알려준대요.'},
-   {t:'꽃잎 길을 손가락으로 따라 그려서, 제단까지 이어 줘요.',g:{k:'rub',as:'gold',need:4,cue:'꽃잎 길을 따라 그려요'}},
-   {t:'봐요… 제왕나비예요.',burst:'video/dia-de-muertos-souls',auto:5200},
+   {t:'꽃잎 길을 손가락으로 따라 그려서, 제단까지 이어 줘요.',g:{k:'rub',as:'gold',need:1.8,cue:'꽃잎 길을 따라 그려요'}},
+   {t:'봐요… 제왕나비예요.',burst:'video/dia-de-muertos-souls',auto:5200,clearPaint:2600},
    {t:'제왕나비는 캐나다와 미국에서 약 4,000km를 날아와, 딱 이맘때 멕시코에 도착해요. 그래서 돌아온 조상의 영혼이라 믿는 마을들이 있어요.'}]},
  {bg:'img/dia-ofrenda.jpg',blur:true,fx:'petals',card:{img:'img/props/calaverita.jpg',lines:['해골 할머니 오셨네','빵 냄새 맡고 오셨네','초 네 개 다 켰으니','내년에도 길 잃지 마요']},lines:[
    {t:'그리고 이날엔 ‘칼라베리타’라는 장난 시를 써요. 산 사람도 해골로 놀리는, 웃긴 시예요.'},
