@@ -64,9 +64,9 @@ header{text-align:center;padding:calc(30px + env(safe-area-inset-top)) 20px 0;op
   <header><div class="mark">FÊTE</div><p class="tag">오늘은 세계 어딘가의 축제로<br>5분만 놀러 가요</p></header>
   <div id="stage"><button class="arrow" id="prev" aria-label="이전 축제">‹</button><button class="arrow" id="nextB" aria-label="다음 축제">›</button></div>
   <section id="info"><div class="swap"><div class="en"></div><h2></h2><div class="sub"></div><div class="meta"><span class="pl"></span><span class="dd"></span></div></div>
-    <a id="go" href="#">다녀오기 <small>약 5분</small></a><div id="dots"></div></section>
+    <a id="go" href="#">🎟 축제 입장 <small>약 5분</small></a><div id="dots"></div></section>
 </main>
-<script src="js/stories.js?v=1793675412"></script>
+<script src="js/stories.js?v=20d"></script>
 <script>
 (()=>{
 const $=s=>document.querySelector(s),R=(a,b)=>a+Math.random()*(b-a);
@@ -93,7 +93,7 @@ function show(i,instant){const n=cards.length;idx=(i+n)%n;layout(0);const id=ord
     sw.querySelector('.en').textContent=S.en;sw.querySelector('h2').textContent=S.ko;sw.querySelector('.sub').textContent=SUB[id];
     sw.querySelector('.pl').textContent=PLACE[id];const nd=nextDate(id);sw.querySelector('.dd').textContent=!nd?'':nd.past?nd.past+'일 전에 열렸어요':nd.d===0?'오늘 열려요':nd.d<=31?'D-'+nd.d+' · 곧 열려요':'진짜 축제까지 D-'+nd.d;
     sw.classList.remove('out')},instant?0:300);
-  $('#go').href='visit.html?f='+id}
+  $('#go').href='visit.html?f='+id;$('#go').innerHTML='🎟 '+(S.enter||'축제 입장')+' <small>약 5분</small>'}
 function go(){location.href='visit.html?f='+order[idx]}
 $('#go').onclick=e=>{e.preventDefault();go()};
 $('#prev').onclick=()=>show(idx-1);$('#nextB').onclick=()=>show(idx+1);

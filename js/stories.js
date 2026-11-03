@@ -1,7 +1,7 @@
 /* FÊTE · 축제에 다녀오는 5분 — 이야기 데이터
    제스처: write(적기) · hold(꾹 누르기: light/pour/squash) · tap(톡톡: stick/candle/splash) · rub(문지르기: powder/gold) · throw(던지기) */
 const STORIES={
-lan:{id:'lan',en:'Yi Peng',ko:'이펭',city:'Chiang Mai',title:'치앙마이,<br>이펭의 밤',sub:'태국 북부의 보름달 밤으로<br>5분만 다녀와요',cover:'img/yi-peng.jpg',color:'#ffb347',
+lan:{id:'lan',enter:'등불 들고 입장',en:'Yi Peng',ko:'이펭',city:'Chiang Mai',title:'치앙마이,<br>이펭의 밤',sub:'태국 북부의 보름달 밤으로<br>5분만 다녀와요',cover:'img/yi-peng.jpg',color:'#ffb347',
   guide:'쁘아 · 치앙마이 친구',amb:'night',date:['2026-11-24','2027-11-13'],
   learned:['‘이’는 둘째, ‘펭’은 보름. 옛 란나 달력으로 둘째 달 보름밤','하늘로 띄우는 종이 등불은 ‘콤 로이’','같은 밤 강에는 바나나 잎 배 ‘끄라통’을 띄워요'],memo:'하늘로 보낸 걱정',
   story:[
@@ -16,7 +16,7 @@ lan:{id:'lan',en:'Yi Peng',ko:'이펭',city:'Chiang Mai',title:'치앙마이,<br
  {bg:'img/yi-peng.jpg',blur:true,fx:'embers',held:{img:'img/props/lantern-unlit.png',w:.62,ink:[.18,.26,.64,.42]},lines:[
    {t:'자, 이건 당신 거예요.'},
    {t:'보내고 싶은 걱정을 하나, 손가락으로 적어 봐요. 아무도 안 봐요.',g:{k:'write',cue:'등불 종이 위에 손가락으로 적어요'}},
-   {t:'좋아요. 이제 그건 당신 걱정이 아니라, 등불 거예요.'},
+   {t:'좋아요. 이제 그 걱정은 당신 게 아니라, 등불이 가져갈 거예요.'},
    {t:'바닥 심지에 불을 붙였어요. 꾹 누르고, 공기가 찰 때까지 기다려요.',g:{k:'hold',as:'light',cue:'꾹 누르고 기다려요',done:'이제, 놓아주세요'}}]},
  {bg:'img/yi-peng.jpg',fx:'rise',lines:[
    {t:'보세요. 올라가요.',auto:3600},
@@ -24,11 +24,11 @@ lan:{id:'lan',en:'Yi Peng',ko:'이펭',city:'Chiang Mai',title:'치앙마이,<br
    {t:'불이 꺼지기 전에 등불이 눈에서 사라지면, 행운이 온다고들 해요.'}]},
  {place:['Mae Ping','같은 밤, 강가'],vid:'video/yi-peng-loop',bg:'img/yi-peng.jpg',fx:'fireflies',lines:[
    {t:'같은 밤, 강에는 바나나 잎으로 접은 작은 배 ‘끄라통’도 띄워요. 태국 전역에서 열리는 러이끄라통이에요.'},
-   {t:'아, 요즘 치앙마이 시내에선 등불을 마음대로 못 날려요. 2015년부터 비행기 안전 때문에 막혔거든요.'},
+   {t:'아, 요즘 치앙마이 시내에선 등불을 마음대로 못 날려요. 공항이 가까워서, 비행기 안전 때문에 막혔거든요.'},
    {t:'그래서 지금은 정해진 행사장에서, 정해진 시간에, 다 같이 띄워요.'},
    {t:'올해 진짜 이펭은 11월 24일과 25일이에요. 언젠가는 진짜로도 와요.',end:true}]}]},
 
-tom:{id:'tom',en:'La Tomatina',ko:'라 토마티나',city:'Buñol',title:'토마토가<br>쏟아지는 날',sub:'스페인 작은 마을의<br>세상에서 제일 큰 음식 싸움',cover:'img/la-tomatina.jpg',color:'#ff5a3c',
+tom:{id:'tom',enter:'버릴 옷 입고 입장',en:'La Tomatina',ko:'라 토마티나',city:'Buñol',title:'토마토가<br>쏟아지는 날',sub:'스페인 작은 마을의<br>세상에서 제일 큰 음식 싸움',cover:'img/la-tomatina.jpg',color:'#ff5a3c',
   guide:'루시아 · 부뇰 친구',amb:'crowd',date:['lastWedAug'],
   learned:['매년 8월 마지막 수요일, 인구 1만 명이 안 되는 마을 부뇰','던지기 전에 꼭 으깨기. 딱 1시간, 끝나면 소방차가 청소','1945년 마을 청년들의 몸싸움에서 시작'],
   story:[
@@ -52,7 +52,7 @@ tom:{id:'tom',en:'La Tomatina',ko:'라 토마티나',city:'Buñol',title:'토마
    {t:'끝나면 소방차가 거리를 물로 싹 씻어내. 다들 강가에 가서 몸도 씻고.'},
    {t:'1945년, 마을 청년들의 몸싸움에서 시작된 축제야. 내년 8월 마지막 수요일에 또 와!',end:true}]}]},
 
-song:{id:'song',en:'Songkran',ko:'송끄란',city:'Thailand',title:'4월 13일,<br>태국의 설날',sub:'물로 지난해를 씻어내는<br>세상에서 가장 시원한 새해',cover:'img/songkran.jpg',color:'#58c8ff',
+song:{id:'song',enter:'물벼락 맞으러 입장',en:'Songkran',ko:'송끄란',city:'Thailand',title:'4월 13일,<br>태국의 설날',sub:'물로 지난해를 씻어내는<br>세상에서 가장 시원한 새해',cover:'img/songkran.jpg',color:'#58c8ff',
   guide:'닛 · 방콕 친구',amb:'water',date:['yearly-4-13'],
   learned:['송끄란은 ‘지나간다, 옮겨간다’는 뜻. 해가 새 별자리로 넘어가는 날','어른 손에 향기로운 물을 붓는 ‘롯남담후아’가 먼저','그 조용한 의식이 커져서 지금의 거리 물싸움이 됐어요'],
   story:[
@@ -64,7 +64,7 @@ song:{id:'song',en:'Songkran',ko:'송끄란',city:'Thailand',title:'4월 13일,<
    {t:'집안 어른 손바닥에 향기로운 물을 살살 부어 드려요. ‘롯남담후아’라고 해요.'},
    {t:'물엔 재스민이나 장미 향을 타요. 고마웠고, 서운하게 한 게 있으면 용서해 달라는 마음이에요.'},
    {t:'어른 손 위를 꾹 누르고, 천천히 부어 드려요.',g:{k:'hold',as:'pour',at:[[.15,.57],[.85,.575]],cue:'손 위를 꾹 · 천천히',done:'다 부었어요'}},
-   {t:'어른이 재스민 꽃목걸이를 걸어 주며 축복해 줘요. “올 한 해 건강하고 행복하렴.”',gift:{img:'img/props/jasmine.png',from:[.5,.42]}}]},
+   {t:'어른이 축복을 빌어 줘요. “올 한 해 건강하고 행복하렴.” 재스민 꽃목걸이도 하나 나눠 주시네요.',gift:{img:'img/props/jasmine.png',from:[.5,.42]}}]},
  {place:['Street','거리로'],bg:'img/songkran.jpg',vid:'video/songkran-loop',fx:'sparkle',lines:[
    {t:'자, 이제 거리로 나가 볼까요? 어, 위를—',burst:'video/songkran-burst',auto:4200},
    {t:'하하! 물 맞는 건 축복이에요. 화내면 안 돼요.'},
@@ -72,7 +72,7 @@ song:{id:'song',en:'Songkran',ko:'송끄란',city:'Thailand',title:'4월 13일,<
    {t:'이 조용한 물 붓기가 커져서, 지금의 거리 물싸움이 됐대요.',vid:'video/songkran-event'},
    {t:'4월은 태국에서 제일 더울 때라, 물이 반갑기도 해요. 내년 4월 13일에 만나요!',end:true}]}]},
 
-holi:{id:'holi',en:'Holi',ko:'홀리',city:'India',title:'불을 피우고,<br>색을 던지는 봄',sub:'인도의 봄맞이, 홀리 전날 밤부터<br>색으로 물드는 아침까지',cover:'img/holi.jpg',color:'#ff4fa8',
+holi:{id:'holi',enter:'흰 옷 입고 입장',en:'Holi',ko:'홀리',city:'India',title:'불을 피우고,<br>색을 던지는 봄',sub:'인도의 봄맞이, 홀리 전날 밤부터<br>색으로 물드는 아침까지',cover:'img/holi.jpg',color:'#ff4fa8',
   guide:'아난야 · 인도 친구',amb:'crowd',date:['2027-03-22'],
   learned:['전날 밤 ‘홀리카 다한’ 모닥불로 나쁜 기운을 태워요','다음 날엔 누구에게나 색 가루 ‘굴랄’을 묻혀도 돼요','‘부라 나 마노, 홀리 하이’ = 기분 나빠하지 마, 홀리잖아!'],
   story:[
@@ -90,7 +90,7 @@ holi:{id:'holi',en:'Holi',ko:'홀리',city:'India',title:'불을 피우고,<br>�
    {t:'다 같이 색을 던지고 나면, 씻고 달콤한 과자 ‘구지야’를 나눠 먹어요.',vid:'video/holi-event'},
    {t:'내년 홀리는 3월 22일이에요. 하얀 옷 입고 와요!',end:true}]}]},
 
-burn:{id:'burn',en:'Burning Man',ko:'버닝맨',city:'Black Rock City',title:'사막 위의<br>일주일짜리 도시',sub:'돈 대신 선물로 사는 곳,<br>마지막엔 모든 걸 태우는 곳',cover:'img/burning-man-playa.jpg',color:'#ff8a3d',
+burn:{id:'burn',enter:'사막 도시로 입장',en:'Burning Man',ko:'버닝맨',city:'Black Rock City',title:'사막 위의<br>일주일짜리 도시',sub:'돈 대신 선물로 사는 곳,<br>마지막엔 모든 걸 태우는 곳',cover:'img/burning-man-playa.jpg',color:'#ff8a3d',
   guide:'레이 · 버너 친구',amb:'desert',date:['burnSat'],
   learned:['네바다 사막에 약 7만 명이 세우는 도시, 블랙록 시티','돈 대신 선물. 공식적으로 파는 건 얼음 정도','맨이 탈 땐 환호, 사원이 탈 땐 침묵'],memo:'사원에 남긴 한 마디',
   story:[
@@ -113,18 +113,18 @@ burn:{id:'burn',en:'Burning Man',ko:'버닝맨',city:'Black Rock City',title:'�
    {t:'다 끝나면 흔적 하나 남기지 않고 떠나. 그게 이 도시의 규칙이야.',note:'Leave No Trace. 쓰레기통도 없어서, 가져온 건 전부 다시 가져가요.'},
    {t:'또 와. 여기 오면 다들, 집에 왔다고 하거든.',end:true}]}]},
 
-dead:{id:'dead',en:'Día de Muertos',ko:'죽은 자의 날',city:'México',title:'일 년에 한 번,<br>그리운 사람이 오는 밤',sub:'멕시코의 가장 다정한 축제,<br>죽은 자의 날',cover:'img/dia-ofrenda.jpg',color:'#ff8a1f',
+dead:{id:'dead',enter:'꽃길 따라 입장',en:'Día de Muertos',ko:'죽은 자의 날',city:'México',title:'일 년에 한 번,<br>그리운 사람이 오는 밤',sub:'멕시코의 가장 다정한 축제,<br>죽은 자의 날',cover:'img/dia-ofrenda.jpg',color:'#ff8a1f',
   guide:'로사 · 멕시코 친구',amb:'guitar',date:['yearly-11-1'],
   learned:['11월 1일엔 아이들, 2일엔 어른들의 영혼이 돌아와요','금잔화(셈파수칠)의 색과 향이 영혼의 길잡이','제왕나비는 약 4,000km를 날아와 딱 이맘때 도착해요'],
   story:[
  {place:['México','11월 1일과 2일'],bg:'img/dia-de-muertos.jpg',vid:'video/dia-de-muertos-loop',fx:'petals',lines:[
    {t:'올라! 여긴 멕시코. 오늘은 ‘죽은 자의 날’이에요.'},
-   {t:'무서운 날 아니에요. 세상을 떠난 가족이 일 년에 한 번, 집에 놀러 오는 날이에요.'},
+   {t:'무서운 날이 아니에요. 세상을 떠난 가족이 일 년에 한 번, 집에 놀러 오는 날이에요.'},
    {t:'11월 1일엔 아이들 영혼이, 2일엔 어른들 영혼이 온대요.'}]},
  {place:['Ofrenda','할머니의 제단'],bg:'img/dia-ofrenda.jpg',fx:'petals',lines:[
    {t:'이건 ‘오프렌다’, 제단이에요. 할머니 사진이랑 좋아하시던 빵, 설탕 해골을 올려요.'},
    {t:'할머니가 길을 잃지 않게, 초를 켜 줘요.',g:{k:'tap',as:'candle',at:[[.235,.195],[.585,.19],[.135,.255],[.725,.255]],cue:'반짝이는 초를 톡톡'}},
-   {t:'이 주황 꽃은 ‘셈파수칠’, 금잔화예요. 진한 색과 향이 영혼에게 집으로 오는 길을 알려준대요.'},
+   {t:'이 주황 꽃은 ‘셈파수칠’, 금잔화예요. 진한 색과 향이 영혼에게 집으로 오는 길을 알려 준대요.'},
    {t:'꽃잎 길을 손가락으로 따라 그려서, 제단까지 이어 줘요.',g:{k:'rub',as:'gold',need:1.8,cue:'꽃잎 길을 따라 그려요'}},
    {t:'봐요… 제왕나비예요.',burst:'video/dia-de-muertos-souls',auto:5200,clearPaint:2600},
    {t:'제왕나비는 캐나다와 미국에서 약 4,000km를 날아와, 딱 이맘때 멕시코에 도착해요. 그래서 돌아온 조상의 영혼이라 믿는 마을들이 있어요.'}]},

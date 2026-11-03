@@ -159,6 +159,15 @@ canvas#paint{position:absolute;inset:0;width:100%;height:100%;pointer-events:non
 
 /* 안내 문구·상단바·자막이 초/터치 영역을 가리지 않게 */
 #cue,#top,#say,#next{pointer-events:none}#top button,#top a,#snd,#say a{pointer-events:auto}
+
+/* 등불·메모지: 쓰기 / 지우개 / 모두 지우기 */
+#wtool{position:absolute;left:50%;bottom:calc(262px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:8;display:flex;gap:4px;padding:4px;border-radius:99px;background:rgba(10,6,14,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,240,220,.18);opacity:0;pointer-events:none;transition:opacity .5s;white-space:nowrap}
+#wtool.on{opacity:1;pointer-events:auto}
+#wtool button{padding:7px 13px;border-radius:99px;font-size:12.5px;color:#fff3e4;background:transparent;border:0;letter-spacing:.02em}
+#wtool button.sel{background:var(--paper);color:#2a1420;font-weight:700}
+#done.on{opacity:1;pointer-events:auto}
+@media (max-width:899px),(max-aspect-ratio:1/1){#done{bottom:calc(212px + env(safe-area-inset-bottom))}}
+@media (min-width:900px) and (min-aspect-ratio:1/1){#wtool{left:calc(var(--pl) + var(--pw)/2);bottom:98px}#wtool button{font-size:14px;padding:8px 16px}}
 </style>
 </head>
 <body>
@@ -173,6 +182,7 @@ canvas#paint{position:absolute;inset:0;width:100%;height:100%;pointer-events:non
   <div id="top"><div class="mark">FÊTE</div><div id="chap"></div><button id="snd">소리 끄기</button></div>
   <div id="place"><div class="p1"></div><div class="p2"></div></div>
   <div id="cue"></div>
+  <div id="wtool"><button data-m="pen" class="sel">✎ 쓰기</button><button data-m="erase">⌫ 지우개</button><button data-m="clear">↺ 모두 지우기</button></div>
   <button id="done">다 적었어요</button>
   <div id="say"><div id="who"></div><div id="line"></div><div id="note"></div></div>
   <div id="next">눌러서 계속 ›</div>
@@ -180,7 +190,7 @@ canvas#paint{position:absolute;inset:0;width:100%;height:100%;pointer-events:non
     <div class="k"></div>
     <h1></h1>
     <p></p>
-    <button id="go">떠나기</button>
+    <button id="go">🎟 축제 입장</button>
     <small>🎧 소리를 켜면 더 좋아요</small>
   </div>
   <div class="card" id="end">
@@ -196,7 +206,7 @@ canvas#paint{position:absolute;inset:0;width:100%;height:100%;pointer-events:non
     <div class="btns"><button id="again">처음부터</button><a class="go2" href="./">다른 축제로</a></div>
   </div>
 </div>
-<script src="js/stories.js?v=1793675412"></script>
-<script src="js/visit.js?v=20c"></script>
+<script src="js/stories.js?v=20d"></script>
+<script src="js/visit.js?v=20d"></script>
 </body>
 </html>
