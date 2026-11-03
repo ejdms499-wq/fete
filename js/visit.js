@@ -48,7 +48,7 @@ function scene(c,over){const bd=$('#bd');if(bd)bd.style.backgroundImage='url('+c
     v.addEventListener('playing',()=>v.style.opacity=1,{once:true});L.appendChild(v);const p=v.play();p&&p.catch&&p.catch(()=>{});
     if(over)v.addEventListener('ended',()=>{v.style.transition='opacity 2.4s';v.style.opacity=0})}
   L.querySelectorAll('img,video').forEach(e=>e.style.filter=c.blur?'blur(5px) brightness(.62)':'');
-  const old=front;requestAnimationFrame(()=>{L.classList.add('on');old.classList.remove('on')});front=L;back=old}
+  const old=front;L.style.zIndex=2;old.style.zIndex=1;requestAnimationFrame(()=>{L.classList.add('on');clearTimeout(old._t);old._t=setTimeout(()=>{if(old!==front)old.classList.remove('on')},1700)});front=L;back=old}
 /* 그림이 화면 어디에 있는지 (잘리지 않게 전체를 보여주므로 직접 계산) */
 function imgRect(){const L=front.getBoundingClientRect(),A=app.getBoundingClientRect(),ar=curImg&&curImg.naturalWidth?curImg.naturalWidth/curImg.naturalHeight:.5607;
   let w,h;if(L.width/L.height>ar){h=L.height;w=h*ar}else{w=L.width;h=w/ar}return{x:L.left-A.left+(L.width-w)/2,y:L.top-A.top+(L.height-h)/2,w,h}}

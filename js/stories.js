@@ -88,15 +88,15 @@ holi:{id:'holi',en:'Holi',ko:'홀리',city:'India',title:'불을 피우고,<br>�
    {t:'다 같이 색을 던지고 나면, 씻고 달콤한 과자 ‘구지야’를 나눠 먹어요.',vid:'video/holi-event'},
    {t:'내년 홀리는 3월 22일이에요. 하얀 옷 입고 와요!',end:true}]}]},
 
-burn:{id:'burn',en:'Burning Man',ko:'버닝맨',city:'Black Rock City',title:'사막 위의<br>일주일짜리 도시',sub:'돈 대신 선물로 사는 곳,<br>마지막엔 모든 걸 태우는 곳',cover:'img/burning-man.jpg',color:'#ff8a3d',
+burn:{id:'burn',en:'Burning Man',ko:'버닝맨',city:'Black Rock City',title:'사막 위의<br>일주일짜리 도시',sub:'돈 대신 선물로 사는 곳,<br>마지막엔 모든 걸 태우는 곳',cover:'img/burning-man-playa.jpg',color:'#ff8a3d',
   guide:'레이 · 버너 친구',amb:'desert',date:['burnSat'],
   learned:['네바다 사막에 약 7만 명이 세우는 도시, 블랙록 시티','돈 대신 선물. 공식적으로 파는 건 얼음 정도','맨이 탈 땐 환호, 사원이 탈 땐 침묵'],memo:'사원에 남긴 한 마디',
   story:[
- {place:['Black Rock City','네바다 사막'],bg:'img/burning-man.jpg',vid:'video/burning-man-loop',fx:'dust',lines:[
+ {place:['Black Rock City','네바다 사막'],bg:'img/burning-man-playa.jpg',vid:'video/burning-man-loop',fx:'dust',lines:[
    {t:'웰컴 홈! 여기 도착하면 다들 이렇게 인사해.'},
    {t:'아무것도 없던 사막에 약 7만 명이 일주일짜리 도시를 세워. 이름은 블랙록 시티.'},
    {t:'여긴 돈 대신 선물로 살아. 공식적으로 파는 건 얼음 정도야.'}]},
- {bg:'img/burning-man.jpg',vid:'video/burning-man-loop',fx:'dust',lines:[
+ {bg:'img/burning-man-playa.jpg',vid:'video/burning-man-loop',fx:'dust',lines:[
    {t:'토요일 밤, 저 나무 인형 ‘맨’을 태워.'},
    {t:'불꽃놀이가 먼저 하늘을 열고,',burst:'video/burning-man-fireworks',auto:4200},
    {t:'맨이 타올라. 다들 소리 지르고 춤춰.',vid:'video/burning-man-event'}]},

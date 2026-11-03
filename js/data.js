@@ -1,5 +1,5 @@
 /* 축제 이미지 경로 */
-const IMG={song:'img/songkran.jpg',burn:'img/burning-man.jpg',holi:'img/holi.jpg',lan:'img/yi-peng.jpg',dead:'img/dia-de-muertos.jpg',tom:'img/la-tomatina.jpg'};
+const IMG={song:'img/songkran.jpg',burn:'img/burning-man-playa.jpg',holi:'img/holi.jpg',lan:'img/yi-peng.jpg',dead:'img/dia-de-muertos.jpg',tom:'img/la-tomatina.jpg'};
 
 /* 축제 영상: 평소(반복) / 이벤트(게이지가 차면) */
 const VID={song:{
