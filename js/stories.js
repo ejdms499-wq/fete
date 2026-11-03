@@ -61,8 +61,8 @@ song:{id:'song',en:'Songkran',ko:'송끄란',city:'Thailand',title:'4월 13일,<
  {place:['Rod Nam Dam Hua','어른께 물 붓기'],bg:'img/songkran-ritual.jpg',fx:'sparkle',lines:[
    {t:'집안 어른 손바닥에 향기로운 물을 살살 부어 드려요. ‘롯남담후아’라고 해요.'},
    {t:'물엔 재스민이나 장미 향을 타요. 고마웠고, 서운하게 한 게 있으면 용서해 달라는 마음이에요.'},
-   {t:'어른 손 위를 꾹 누르고, 천천히 부어 드려요.',g:{k:'hold',as:'pour',at:[[.25,.55],[.76,.55]],cue:'손 위를 꾹 · 천천히',done:'다 부었어요'}},
-   {t:'어른이 재스민 꽃목걸이를 걸어 주며 축복해 줘요. “올 한 해 건강하고 행복하렴.”',gift:{img:'img/props/jasmine.png',from:[.5,.45]}}]},
+   {t:'어른 손 위를 꾹 누르고, 천천히 부어 드려요.',g:{k:'hold',as:'pour',at:[[.15,.57],[.85,.575]],cue:'손 위를 꾹 · 천천히',done:'다 부었어요'}},
+   {t:'어른이 재스민 꽃목걸이를 걸어 주며 축복해 줘요. “올 한 해 건강하고 행복하렴.”',gift:{img:'img/props/jasmine.png',from:[.5,.42]}}]},
  {place:['Street','거리로'],bg:'img/songkran.jpg',vid:'video/songkran-loop',fx:'sparkle',lines:[
    {t:'자, 이제 거리로 나가 볼까요? 어, 위를—',burst:'video/songkran-burst',auto:4200},
    {t:'하하! 물 맞는 건 축복이에요. 화내면 안 돼요.'},
