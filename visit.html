@@ -118,6 +118,28 @@ canvas#paint{position:absolute;inset:0;width:100%;height:100%;pointer-events:non
 #end .wrap-wish[hidden]{display:none}
 @media (min-width:900px) and (min-aspect-ratio:1/1){#poem{left:calc(var(--pl) + var(--pw)/2);width:calc(var(--pw)*.9)}#poem .pl{font-size:20px}}
 @keyframes jolt{0%{transform:none}15%{transform:translate(-8px,5px)}30%{transform:translate(7px,-4px)}50%{transform:translate(-4px,-3px)}75%{transform:translate(3px,2px)}100%{transform:none}}#app.jolt{animation:jolt .5s ease-out}
+
+/* 웹: 액자 없이 화면 꽉 차게 — 그림을 세로 전체 높이로, 양옆은 같은 장면이 이어지듯 */
+@media (min-width:900px) and (min-aspect-ratio:1/1){
+  #app{--ph:100vh;--pw:calc(100vh*9/16);--pl:max(4vw,calc(42vw - var(--pw)/2))}
+  .layer,#shade{top:0;height:100vh;border-radius:0;box-shadow:none;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%)}
+  #shade{background:linear-gradient(180deg,rgba(7,5,12,.35),rgba(7,5,12,0) 18%,rgba(7,5,12,0) 82%,rgba(7,5,12,.4))}
+  #bd{inset:-4%;filter:blur(22px) brightness(.5) saturate(1.15);transform:scale(1.08)}
+  #bd::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,5,12,.15) 0%,rgba(7,5,12,0) 30%,rgba(7,5,12,.55) 62%,rgba(7,5,12,.75) 100%)}
+  #say{left:calc(var(--pl) + var(--pw) + 5vw)}
+  #next,#place{left:calc(var(--pl) + var(--pw) + 5vw)}
+  #cue{top:28px}
+  #done{bottom:44px}
+}
+
+/* 흐린 큰 그림이 '잘린 창문'처럼 보이게 만들어서 제거: 배경은 축제 색 빛만 */
+@media (min-width:900px) and (min-aspect-ratio:1/1){
+  #bd{display:none!important}
+  #app{background:radial-gradient(60% 80% at 30% 50%,color-mix(in srgb,var(--fc) 22%,transparent),transparent 70%),radial-gradient(50% 60% at 85% 80%,color-mix(in srgb,var(--fc) 10%,transparent),transparent 70%),#07050c}
+  .layer,#shade{-webkit-mask-image:none;mask-image:none;box-shadow:0 0 120px rgba(0,0,0,.6)}
+  #shade{background:none}
+}
+#bd{display:none!important}#app{background:radial-gradient(80% 50% at 50% 45%,color-mix(in srgb,var(--fc,#ffb347) 14%,transparent),transparent 75%),#07050c}
 </style>
 </head>
 <body>
