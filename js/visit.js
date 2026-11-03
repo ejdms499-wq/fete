@@ -235,21 +235,56 @@ $('#again').onclick=()=>{location.reload()};
 /* ---------- 오늘의 카드 (스토리 크기 이미지) ---------- */
 function loadImg(src){return new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src})}
 function wrapText(g,t,x,y,maxW,lh){let line='',yy=y;for(const ch of t){const test=line+ch;if(g.measureText(test).width>maxW&&line){g.fillText(line,x,yy);line=ch;yy+=lh}else line=test}g.fillText(line,x,yy);return yy}
-async function makeCard(){const Wc=1080,Hc=1920,cv=document.createElement('canvas');cv.width=Wc;cv.height=Hc;const g=cv.getContext('2d');
-  try{await Promise.all(['600 80px Hahmlet','400 40px "Gowun Batang"','italic 600 60px Fraunces','italic 400 40px Fraunces'].map(f=>document.fonts.load(f)))}catch(e){}
-  g.fillStyle='#07050c';g.fillRect(0,0,Wc,Hc);
-  const im=await loadImg(S.cover);if(im){const ar=im.width/im.height;let w=Wc,h=w/ar;if(h<Hc){h=Hc;w=h*ar}g.drawImage(im,(Wc-w)/2,0,w,h)}
-  let gr=g.createLinearGradient(0,0,0,Hc);gr.addColorStop(0,'rgba(7,5,12,.55)');gr.addColorStop(.18,'rgba(7,5,12,0)');gr.addColorStop(.5,'rgba(7,5,12,.05)');gr.addColorStop(.72,'rgba(7,5,12,.82)');gr.addColorStop(1,'rgba(7,5,12,.96)');g.fillStyle=gr;g.fillRect(0,0,Wc,Hc);
-  g.textAlign='center';g.fillStyle='#fff4e4';g.shadowColor='rgba(255,200,150,.7)';g.shadowBlur=30;g.font='italic 600 84px Fraunces, serif';g.fillText('FÊTE',Wc/2,150);g.shadowBlur=0;
-  g.font='italic 400 38px Fraunces, serif';g.fillStyle=S.color;g.fillText('Today in '+S.city,Wc/2,1270);
-  g.fillStyle='#fff4e4';g.font='600 92px Hahmlet, serif';g.fillText('오늘 다녀온 '+S.ko,Wc/2,1385);
-  let y=1470;g.font='400 36px "Gowun Batang", serif';
-  if(hadInk&&S.memo){g.fillStyle='rgba(255,207,158,.95)';g.fillText(S.memo,Wc/2,y);y+=30;const iw=520,ih=iw*ink.height/ink.width;
-    g.save();g.filter='invert(1) sepia(1) saturate(.3) brightness(1.15)';g.drawImage(ink,(Wc-iw)/2,y,iw,ih);g.restore();y+=ih+40}
-  else{g.fillStyle='rgba(255,244,228,.9)';y=wrapText(g,S.learned[0],Wc/2,y+10,920,54)+80}
-  const d=new Date(),n=nextDate(FID);g.fillStyle='rgba(255,244,228,.75)';g.font='400 32px "Gowun Batang", serif';
-  g.fillText(d.getFullYear()+'. '+(d.getMonth()+1)+'. '+d.getDate()+'  ·  '+(n?(n.past?'진짜 '+S.ko+'는 '+n.past+'일 전에':'진짜 '+S.ko+'까지 D-'+n.d):''),Wc/2,Math.max(y,1740));
-  g.fillStyle='rgba(255,244,228,.5)';g.font='400 28px "Gowun Batang", serif';g.fillText('세계의 축제로 5분 여행 · FÊTE',Wc/2,1840);
+/* 빈티지 축제 포스터: 종이 + 두 가지 잉크(리소그래프) + 망점 + 살짝 어긋난 인쇄 */
+const POSTER={
+  lan:{city:'CHIANG MAI · THAILAND',title:'Yi Peng',tag:'Festival of Lights',when:'24 — 25 NOV 2026',ink:[245,150,58],dark:[28,42,92],paper:[244,234,214],mark:[.278,.338,.08],markC:[28,42,92]},
+  tom:{city:'BUÑOL · SPAIN',title:'La Tomatina',tag:'The Great Tomato Battle',when:'LAST WEDNESDAY OF AUGUST',ink:[232,64,42],dark:[24,86,130],paper:[246,236,214]},
+  song:{city:'THAILAND',title:'Songkran',tag:'Thai New Year · Water Festival',when:'13 — 15 APRIL',ink:[47,166,217],dark:[22,58,110],paper:[245,238,220]},
+  holi:{city:'INDIA',title:'Holi',tag:'Festival of Colours',when:'22 MARCH 2027',ink:[255,79,154],dark:[59,42,143],paper:[247,236,222],titleC:[59,42,143]},
+  burn:{city:'BLACK ROCK CITY · NEVADA',title:'Burning Man',tag:'A City in the Desert',when:'LATE AUGUST — LABOR DAY',ink:[255,122,61],dark:[90,45,79],paper:[243,232,216],mark:[.5,.44,.2],markC:[90,45,79]},
+  dead:{city:'MÉXICO',title:'Día de Muertos',tag:'The Day of the Dead',when:'1 — 2 NOVEMBER',ink:[255,138,31],dark:[106,30,90],paper:[245,235,215]}};
+function riso(src,w,h,P){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');
+  const ar=src.width/src.height;let sw=w,sh=w/ar;if(sh<h){sh=h;sw=h*ar}g.drawImage(src,(w-sw)/2,(h-sh)*.4,sw,sh);
+  const d=g.getImageData(0,0,w,h),px=d.data,out=g.createImageData(w,h),o=out.data;
+  const cell=7,c1=Math.cos(.26),s1=Math.sin(.26),c2=Math.cos(.785),s2=Math.sin(.785),k=Math.PI*2/cell;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=(y*w+x)*4,L=(.3*px[i]+.59*px[i+1]+.11*px[i+2])/255;
+    const u1=x*c1-y*s1,v1=x*s1+y*c1,u2=x*c2-y*s2,v2=x*s2+y*c2;
+    const p1=(Math.cos(u1*k)+Math.cos(v1*k))/4+.5,p2=(Math.cos(u2*k)+Math.cos(v2*k))/4+.5;
+    const aA=Math.min(1,Math.max(0,(.94-L)/.62)),aD=Math.min(1,Math.max(0,(.52-L)/.42));
+    const inkA=aA>p2?1:0,inkD=aD>p1?.92:0;
+    let r=P.paper[0],gg=P.paper[1],bb=P.paper[2];
+    if(inkA){r=r*P.ink[0]/255;gg=gg*P.ink[1]/255;bb=bb*P.ink[2]/255}
+    o[i]=r;o[i+1]=gg;o[i+2]=bb;o[i+3]=255;o[i+3]=inkD?255:255;
+    if(inkD){o[i]=r*(1-inkD)+r*P.dark[0]/255*inkD;o[i+1]=gg*(1-inkD)+gg*P.dark[1]/255*inkD;o[i+2]=bb*(1-inkD)+bb*P.dark[2]/255*inkD}}
+  /* 어긋난 인쇄: 진한 잉크 판을 살짝 밀어 다시 찍기 */
+  g.putImageData(out,0,0);const sh2=document.createElement('canvas');sh2.width=w;sh2.height=h;const s2g=sh2.getContext('2d'),dd=s2g.createImageData(w,h),q=dd.data;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=(y*w+x)*4,L=(.3*px[i]+.59*px[i+1]+.11*px[i+2])/255,u=x*c1-y*s1,v=x*s1+y*c1,p=(Math.cos(u*k)+Math.cos(v*k))/4+.5,a=Math.min(1,Math.max(0,(.42-L)/.36));
+    if(a>p){q[i]=P.dark[0];q[i+1]=P.dark[1];q[i+2]=P.dark[2];q[i+3]=70}}
+  s2g.putImageData(dd,0,0);g.globalCompositeOperation='multiply';g.drawImage(sh2,3,2);g.globalCompositeOperation='source-over';return c}
+function grain(g,W,H,amt){const d=g.getImageData(0,0,W,H),p=d.data;for(let i=0;i<p.length;i+=4){const n=(Math.random()-.5)*amt;p[i]+=n;p[i+1]+=n;p[i+2]+=n}g.putImageData(d,0,0)}
+function spaced(g,t,x,y,sp){const al=g.textAlign;if('letterSpacing' in g){g.letterSpacing=sp+'px';g.textAlign='center';g.fillText(t,x+sp/2,y);g.letterSpacing='0px'}else{g.textAlign='center';g.fillText(t.split('').join('\u200A'),x,y)}g.textAlign=al}
+async function makeCard(){const Wc=1080,Hc=1920,cv=document.createElement('canvas');cv.width=Wc;cv.height=Hc;const g=cv.getContext('2d'),P=POSTER[FID];
+  try{await Promise.all(['italic 600 120px Fraunces','italic 400 40px Fraunces','600 60px Hahmlet','400 30px Hahmlet','400 30px "Gowun Batang"'].map(f=>document.fonts.load(f)))}catch(e){}
+  const rgb=a=>'rgb('+a.join(',')+')',PAPER=[240,229,207];g.fillStyle=rgb(PAPER);g.fillRect(0,0,Wc,Hc);
+  for(let i=0;i<1400;i++){g.fillStyle='rgba(110,80,50,'+(Math.random()*.06)+')';g.fillRect(Math.random()*Wc,Math.random()*Hc,Math.random()*3,Math.random()*1.4)}
+  /* 포스터 그림 */
+  const im=await loadImg('img/poster/'+FID+'.jpg')||await loadImg(S.cover);const M=74,TOP=74,BOT=300;let aw=Wc-M*2,ah=aw*im.height/im.width;if(ah>Hc-TOP-BOT){ah=Hc-TOP-BOT;aw=ah*im.width/im.height}const ax=(Wc-aw)/2,ay=TOP;
+  g.drawImage(im,ax,ay,aw,ah);
+  /* 내 글씨를 그림 속 잉크로 */
+  if(hadInk&&P.mark){const iw=aw*P.mark[2],ih=iw*ink.height/ink.width,tmp=document.createElement('canvas');tmp.width=ink.width;tmp.height=ink.height;const tg=tmp.getContext('2d');tg.shadowColor='#000';tg.shadowBlur=0;for(let o of [[0,0],[1.5,0],[0,1.5],[1.5,1.5]])tg.drawImage(ink,o[0],o[1]);tg.globalCompositeOperation='source-in';tg.fillStyle=rgb(P.markC||PAPER);tg.fillRect(0,0,tmp.width,tmp.height);
+    g.globalAlpha=.85;g.drawImage(tmp,ax+aw*P.mark[0]-iw/2,ay+ah*P.mark[1]-ih/2,iw,ih);g.globalAlpha=1}
+  /* 하늘 위 제목 (오래된 포스터처럼, 잉크가 살짝 어긋나게) */
+  g.textAlign='center';const tc=P.titleC||PAPER;g.fillStyle=rgb(tc);g.font='400 26px Hahmlet, serif';spaced(g,P.city,Wc/2,ay+78,10);
+  let ts=150;g.font='italic 600 '+ts+'px Fraunces, serif';while(g.measureText(P.title).width>aw-80&&ts>60){ts-=6;g.font='italic 600 '+ts+'px Fraunces, serif'}
+  const ty=ay+78+ts*.95+18;g.fillStyle='rgba('+P.ink.join(',')+',.9)';g.fillText(P.title,Wc/2+4,ty+4);g.fillStyle=rgb(tc);g.fillText(P.title,Wc/2,ty);
+  g.font='italic 400 34px Fraunces, serif';g.fillText(P.tag,Wc/2,ty+56);
+  /* 아래 설명 */
+  const by=ay+ah;g.fillStyle=rgb(P.dark);g.font='600 54px Hahmlet, serif';g.fillText(S.ko,Wc/2,by+92);
+  g.font='400 27px Hahmlet, serif';spaced(g,P.when,Wc/2,by+146,7);
+  g.fillRect(M,Hc-112,Wc-M*2,2);const d=new Date();g.font='400 25px "Gowun Batang", serif';g.textAlign='left';
+  g.fillText((hadInk&&S.memo?S.memo+'을 담아 · ':'')+'visited '+d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0'),M,Hc-70);
+  g.textAlign='right';g.font='italic 400 27px Fraunces, serif';g.fillText('FÊTE',Wc-M,Hc-70);
+  grain(g,Wc,Hc,12);
   return new Promise(r=>cv.toBlob(b=>r(b),'image/png'))}
 $('#save').onclick=async()=>{const b=$('#save');b.textContent='카드 만드는 중…';try{const blob=await makeCard();const file=new File([blob],'fete-'+FID+'.png',{type:'image/png'});
     if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'FÊTE · '+S.ko,text:'오늘 '+S.ko+'에 다녀왔어요'})}catch(e){}}
