@@ -49,7 +49,7 @@ const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
 
 /* ---------- 장면 레이어 ---------- */
 let front=$('#L1'),back=$('#L2');
-function scene(c,over){const L=back;L.className='layer '+(c.kb||'');L.innerHTML='';
+function scene(c,over){const bd=$('#bd');if(bd)bd.style.backgroundImage='url('+(c.img||c.bg)+')';const L=back;L.className='layer '+(c.kb||'');L.innerHTML='';
   const im=document.createElement('img');im.src=c.img||c.bg;im.alt='';L.appendChild(im);
   const vs=over||c.vid;if(vs){const v=document.createElement('video');v.muted=true;v.playsInline=true;v.setAttribute('playsinline','');v.autoplay=true;v.loop=!over;
     [['.mp4','video/mp4'],['.webm','video/webm']].forEach(([e,t])=>{const s=document.createElement('source');s.src=vs+e;s.type=t;v.appendChild(s)});v.style.opacity=0;v.style.transition='opacity 1.2s';
@@ -124,6 +124,10 @@ function loop(t){const dt=Math.min(.05,(t-lastT)/1000);lastT=t;requestAnimationF
   fc.globalCompositeOperation='source-over'}
 requestAnimationFrame(loop);
 
+/* 키보드 (웹) */
+addEventListener('keydown',e=>{if(e.repeat)return;if(e.code==='Space'||e.code==='Enter'||e.code==='ArrowRight'){e.preventDefault();audio();
+    if(!$('#start').classList.contains('off')){$('#go').click();return}if(gest==='hold'){holding=true;cue('');whoosh(4.5,.06);return}if(gest==='write'){if($('#done').classList.contains('on'))$('#done').click();return}tap()}});
+addEventListener('keyup',e=>{if(e.code==='Space'&&gest==='hold'&&holding){up()}});
 /* ---------- 시작 / 끝 ---------- */
 STORY.forEach(()=>$('#chap').appendChild(document.createElement('i')));
 $('#go').onclick=()=>{audio();$('#start').classList.add('off');setTimeout(()=>chapter(0),900)};
