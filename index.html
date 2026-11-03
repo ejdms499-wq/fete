@@ -56,6 +56,8 @@ header{text-align:center;padding:calc(30px + env(safe-area-inset-top)) 20px 0;op
   .arrow{display:flex}
   #info{min-height:200px}#info h2{font-size:40px}#info .sub{font-size:15px}
 }
+
+img{-webkit-touch-callout:none;-webkit-user-drag:none;user-select:none}#stage,#stage *{-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 </style>
 </head>
 <body>
@@ -96,6 +98,7 @@ function show(i,instant){const n=cards.length;idx=(i+n)%n;layout(0);const id=ord
   $('#go').href='visit.html?f='+id;$('#go').innerHTML='🎟 '+(S.enter||'축제 입장')+' <small>약 5분</small>'}
 function go(){location.href='visit.html?f='+order[idx]}
 $('#go').onclick=e=>{e.preventDefault();go()};
+stage.addEventListener('contextmenu',e=>e.preventDefault());
 $('#prev').onclick=()=>show(idx-1);$('#nextB').onclick=()=>show(idx+1);
 addEventListener('keydown',e=>{if(e.key==='ArrowLeft')show(idx-1);if(e.key==='ArrowRight')show(idx+1);if(e.key==='Enter')go()});
 /* 끌어서 넘기기 */

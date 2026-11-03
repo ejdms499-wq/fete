@@ -225,6 +225,8 @@ addEventListener('keydown',e=>{if(e.repeat)return;if(e.code==='Space'||e.code===
     tap()}});
 addEventListener('keyup',e=>{if(e.code==='Space'&&gest==='hold'&&holding)up()});
 
+/* 길게 누르기 메뉴(이미지 저장 등) 막기 */
+app.addEventListener('contextmenu',e=>e.preventDefault());
 /* ---------- 시작 / 끝 ---------- */
 const JS=(w,a,b)=>{const c=w.charCodeAt(w.length-1);return c>=0xAC00&&c<=0xD7A3&&(c-0xAC00)%28?a:b};
 STORY.forEach(()=>$('#chap').appendChild(document.createElement('i')));
