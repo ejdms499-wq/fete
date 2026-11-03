@@ -37,7 +37,9 @@ tom:{id:'tom',en:'La Tomatina',ko:'라 토마티나',city:'Buñol',title:'토마
    {t:'인구 1만 명도 안 되는 마을에 오늘은 2만 명이 몰려와. 다들 버릴 옷을 입고서.',note:'2013년부터 안전 때문에 참가자를 약 2만 명으로 제한하고 있어요.'}]},
  {place:['Palo Jabón','비누칠한 기둥'],bg:'img/la-tomatina-pole.jpg',fx:'sun',lines:[
    {t:'시작 전에 전통이 하나 있어. 미끄러운 기둥 꼭대기에 햄이 걸려 있거든.'},
-   {t:'전통대로라면 누군가 저 햄을 따야 싸움이 시작돼. 서로 어깨를 밟고 기어오르지.'}]},
+   {t:'전통대로라면 누군가 저 햄을 따야 싸움이 시작돼. 서로 어깨를 밟고 기어오르지.'},
+   {t:'너도 올라가 볼래? 멈추면 미끄러지니까 빠르게!',g:{k:'tap',as:'climb',n:14,cue:'빠르게 톡톡 · 기둥 오르기'}},
+   {t:'햄을 땄다! 이제 싸움 시작이야!'}]},
  {bg:'img/la-tomatina.jpg',fx:'sun',lines:[
    {t:'트럭이 들어온다! 토마토가 100톤 넘게 실려 있어.',note:'먹으려고 키운 게 아니라, 값싸고 덜 좋은 토마토를 따로 들여와요.'}]},
  {bg:'img/la-tomatina.jpg',blur:true,fx:'sun',held:{img:'img/props/tomato-4.png',w:.42,squash:['img/props/tomato-4.png','img/props/tomato-0.png','img/props/tomato-2.png','img/props/tomato-3.png']},lines:[
