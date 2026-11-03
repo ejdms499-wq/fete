@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#07050c">
+<title>FÊTE · 치앙마이, 이펭의 밤</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{--it:'Fraunces','Hahmlet',serif;--ko:'Hahmlet','Gowun Batang',serif;--sans:'Gowun Batang',serif;--paper:#fff4e4;--gold:#ffcf9e}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#07050c;color:var(--paper);font-family:var(--sans);overflow:hidden;overscroll-behavior:none;touch-action:manipulation}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+#app{position:fixed;inset:0;max-width:520px;margin:0 auto;overflow:hidden;background:#07050c}
+/* 장면 */
+.layer{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease}
+.layer.on{opacity:1}
+.layer img,.layer video{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;object-position:50% 40%}
+.kb-in img{animation:kbIn 26s ease-out forwards}.kb-out img{animation:kbOut 26s ease-out forwards}.kb-up img{animation:kbUp 26s ease-out forwards}
+@keyframes kbIn{from{transform:scale(1)}to{transform:scale(1.12)}}
+@keyframes kbOut{from{transform:scale(1.14)}to{transform:scale(1.02)}}
+@keyframes kbUp{from{transform:scale(1.1) translateY(4%)}to{transform:scale(1.1) translateY(-4%)}}
+#shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(7,5,12,.55) 0%,rgba(7,5,12,0) 22%,rgba(7,5,12,0) 52%,rgba(7,5,12,.82) 100%)}
+#grain{position:absolute;inset:-50%;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1s steps(4) infinite}
+@keyframes grain{25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+canvas#fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+/* 상단 */
+#top{position:absolute;left:0;right:0;top:0;padding:calc(16px + env(safe-area-inset-top)) 20px 0;display:flex;justify-content:space-between;align-items:center;z-index:5}
+.mark{font-family:var(--it);font-style:italic;font-weight:600;font-size:22px;text-shadow:0 0 16px rgba(255,200,150,.6)}
+#chap{display:flex;gap:5px}#chap i{width:16px;height:2px;border-radius:2px;background:rgba(255,255,255,.28);transition:background .6s}#chap i.on{background:var(--gold)}
+#snd{font-size:12px;padding:5px 11px;border:1px solid rgba(255,255,255,.35);border-radius:99px;background:rgba(0,0,0,.25)}
+/* 장소 자막 */
+#place{position:absolute;left:22px;top:calc(64px + env(safe-area-inset-top));z-index:5;opacity:0;transition:opacity 1.2s}
+#place.on{opacity:1}
+#place .p1{font-family:var(--it);font-style:italic;font-size:15px;color:var(--gold)}
+#place .p2{font-family:var(--ko);font-weight:600;font-size:26px;margin-top:2px;text-shadow:0 2px 16px rgba(0,0,0,.6)}
+/* 대사 */
+#say{position:absolute;left:0;right:0;bottom:0;padding:0 24px calc(34px + env(safe-area-inset-bottom));z-index:6}
+#who{font-size:12px;letter-spacing:.06em;color:var(--gold);margin-bottom:8px;opacity:0;transition:opacity .6s}
+#line{font-family:var(--sans);font-size:clamp(18px,5.2vw,21px);line-height:1.62;word-break:keep-all;text-shadow:0 2px 12px rgba(0,0,0,.7);min-height:3.3em}
+#line .w{opacity:0;transition:opacity .5s}#line .w.v{opacity:1}
+#note{margin-top:12px;font-size:12.5px;line-height:1.55;color:#e9dccb;opacity:0;transition:opacity .8s;border-left:2px solid var(--gold);padding-left:10px}
+#note.on{opacity:.9}
+#next{position:absolute;right:24px;bottom:calc(30px + env(safe-area-inset-bottom));z-index:7;font-size:12px;opacity:0;transition:opacity .5s;color:#fff;letter-spacing:.08em}
+#next.on{opacity:.75;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+/* 제스처 */
+#gest{position:absolute;inset:0;z-index:4;touch-action:none}
+#held{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:min(62vw,300px);z-index:3;pointer-events:none;opacity:0;transition:opacity .9s}
+#held.on{opacity:1}
+#held img{width:100%;display:block}
+#held .lit{position:absolute;inset:0;opacity:0}
+#held canvas{position:absolute;left:18%;top:26%;width:64%;height:42%}
+#cue{position:absolute;left:0;right:0;top:calc(110px + env(safe-area-inset-top));text-align:center;z-index:6;font-size:13px;letter-spacing:.04em;opacity:0;transition:opacity .6s;text-shadow:0 1px 8px rgba(0,0,0,.8)}
+#cue.on{opacity:.9}
+#done{position:absolute;left:50%;bottom:calc(150px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:8;padding:10px 22px;border-radius:99px;background:var(--paper);color:#2a1420;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:opacity .5s}
+#done.on{opacity:1;pointer-events:auto}
+/* 시작 / 끝 */
+.card{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;transition:opacity 1.2s}
+.card.off{opacity:0;pointer-events:none}
+#start{background:radial-gradient(120% 70% at 50% 30%,rgba(40,22,40,.35),rgba(7,5,12,.92)),url(img/yi-peng.jpg) center 40%/cover}
+#start .k{font-family:var(--it);font-style:italic;color:var(--gold);font-size:16px}
+#start h1{font-family:var(--ko);font-weight:600;font-size:clamp(34px,10vw,46px);line-height:1.2;margin:8px 0 14px;text-shadow:0 4px 24px rgba(0,0,0,.6)}
+#start p{font-size:14px;line-height:1.7;opacity:.85}
+#go{margin-top:30px;padding:14px 30px;border-radius:99px;background:var(--paper);color:#2a1420;font-weight:700;font-size:15px;box-shadow:0 0 40px rgba(255,190,120,.45)}
+#start small{margin-top:14px;font-size:12px;opacity:.6}
+#end{background:rgba(7,5,12,.78);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none}
+#end.on{opacity:1;pointer-events:auto}
+#end .k{font-family:var(--it);font-style:italic;color:var(--gold);font-size:15px}
+#end h2{font-family:var(--ko);font-weight:600;font-size:28px;margin:6px 0 18px}
+#end .mem{width:min(84vw,360px);border-radius:20px;padding:18px;background:rgba(255,244,228,.07);border:1px solid rgba(255,255,255,.15);text-align:left}
+#end .mem .t{font-size:11.5px;letter-spacing:.06em;color:var(--gold);margin:12px 0 6px}
+#end .mem .t:first-child{margin-top:0}
+#end .mem li{list-style:none;font-size:13.5px;line-height:1.6;margin:4px 0;padding-left:14px;position:relative}
+#end .mem li::before{content:"·";position:absolute;left:2px;color:var(--gold)}
+#end .wish{height:64px;border-radius:12px;background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center}
+#end .wish canvas{height:58px}
+#end .dd{margin-top:14px;font-size:13px}
+#end .btns{display:flex;gap:10px;margin-top:20px}
+#end .btns a,#end .btns button{padding:11px 20px;border-radius:99px;border:1px solid rgba(255,255,255,.4);font-size:14px;text-decoration:none;color:#fff}
+#end .btns .go2{background:var(--paper);color:#2a1420;border-color:var(--paper);font-weight:700}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="layer" id="L1"></div><div class="layer" id="L2"></div>
+  <div id="shade"></div><div id="grain"></div>
+  <div id="held"><img class="un" src="img/props/lantern-unlit.png" alt=""><canvas id="ink" width="300" height="200"></canvas></div>
+  <canvas id="fx"></canvas>
+  <div id="gest"></div>
+  <div id="top"><div class="mark">FÊTE</div><div id="chap"></div><button id="snd">소리 끄기</button></div>
+  <div id="place"><div class="p1"></div><div class="p2"></div></div>
+  <div id="cue"></div>
+  <button id="done">다 적었어요</button>
+  <div id="say"><div id="who"></div><div id="line"></div><div id="note"></div></div>
+  <div id="next">눌러서 계속 ›</div>
+  <div class="card" id="start">
+    <div class="k">Yi Peng · Chiang Mai</div>
+    <h1>치앙마이,<br>이펭의 밤</h1>
+    <p>태국 북부의 보름달 밤으로<br>5분만 다녀와요</p>
+    <button id="go">떠나기</button>
+    <small>🎧 소리를 켜면 더 좋아요</small>
+  </div>
+  <div class="card" id="end">
+    <div class="k">Tonight in Chiang Mai</div>
+    <h2>오늘 다녀온 이펭</h2>
+    <div class="mem">
+      <div class="t">하늘로 보낸 걱정</div><div class="wish"><canvas id="wishcopy" width="300" height="200"></canvas></div>
+      <div class="t">알게 된 것</div>
+      <ul><li>이펭은 옛 란나 왕국 땅, 태국 북부의 보름달 축제</li><li>하늘로 띄우는 종이 등불은 ‘콤 로이’</li><li>걱정과 불운을 실어 보내고, 같은 밤 강에는 끄라통을 띄워요</li></ul>
+    </div>
+    <div class="dd" id="dday"></div>
+    <div class="btns"><button id="again">처음부터</button><a class="go2" href="./">다른 축제</a></div>
+  </div>
+</div>
+<script src="js/visit.js"></script>
+</body>
+</html>
