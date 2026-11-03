@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#07050c">
-<title>FÊTE · 치앙마이, 이펭의 밤</title>
+<title>FÊTE · 축제에 다녀오기</title>
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{--it:'Fraunces','Hahmlet',serif;--ko:'Hahmlet','Gowun Batang',serif;--sans:'Gowun Batang',serif;--paper:#fff4e4;--gold:#ffcf9e}
@@ -58,7 +58,7 @@ canvas#fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 /* 시작 / 끝 */
 .card{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;transition:opacity 1.2s}
 .card.off{opacity:0;pointer-events:none}
-#start{background:radial-gradient(120% 70% at 50% 30%,rgba(40,22,40,.35),rgba(7,5,12,.92)),url(img/yi-peng.jpg) center 40%/cover}
+#start{background:#07050c center 40%/cover}
 #start .k{font-family:var(--it);font-style:italic;color:var(--gold);font-size:16px}
 #start h1{font-family:var(--ko);font-weight:600;font-size:clamp(34px,10vw,46px);line-height:1.2;margin:8px 0 14px;text-shadow:0 4px 24px rgba(0,0,0,.6)}
 #start p{font-size:14px;line-height:1.7;opacity:.85}
@@ -108,13 +108,25 @@ canvas#fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .layer img,.layer video{inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 50%;animation:none!important}
 #bd{display:block;position:absolute;inset:-8%;background:center/cover;filter:blur(40px) brightness(.4) saturate(1.2);transform:scale(1.1);transition:background-image 1.6s}
 @media (min-width:900px) and (min-aspect-ratio:1/1){.layer img,.layer video{object-fit:contain}}
+
+canvas#paint{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#held{transition:opacity .9s,left 1.4s cubic-bezier(.3,.7,.3,1),top 1.4s cubic-bezier(.3,.7,.3,1),width 1.4s cubic-bezier(.3,.7,.3,1)}
+#poem{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%) rotate(-2deg) scale(.96);width:min(84vw,420px);z-index:3;opacity:0;transition:opacity 1.2s,transform 1.2s;pointer-events:none}
+#poem.on{opacity:1;transform:translate(-50%,-50%) rotate(-2deg) scale(1)}
+#poem img{width:100%;display:block;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#poem .pl{position:absolute;left:14%;right:14%;top:22%;bottom:18%;display:flex;flex-direction:column;justify-content:center;gap:.4em;text-align:center;color:#3d2a3f;font-family:var(--sans);font-size:clamp(15px,4.4vw,20px)}
+#end .wrap-wish[hidden]{display:none}
+@media (min-width:900px) and (min-aspect-ratio:1/1){#poem{left:calc(var(--pl) + var(--pw)/2);width:calc(var(--pw)*.9)}#poem .pl{font-size:20px}}
+@keyframes jolt{0%{transform:none}15%{transform:translate(-8px,5px)}30%{transform:translate(7px,-4px)}50%{transform:translate(-4px,-3px)}75%{transform:translate(3px,2px)}100%{transform:none}}#app.jolt{animation:jolt .5s ease-out}
 </style>
 </head>
 <body>
 <div id="app">
   <div id="bd"></div><div class="layer" id="L1"></div><div class="layer" id="L2"></div>
   <div id="shade"></div><div id="grain"></div>
-  <div id="held"><img class="un" src="img/props/lantern-unlit.png" alt=""><canvas id="ink" width="300" height="200"></canvas></div>
+  <canvas id="paint"></canvas>
+  <div id="held"><img class="un" alt=""><canvas id="ink" width="300" height="200"></canvas></div>
+  <div id="poem"><img alt=""><div class="pl"></div></div>
   <canvas id="fx"></canvas>
   <div id="gest"></div>
   <div id="top"><div class="mark">FÊTE</div><div id="chap"></div><button id="snd">소리 끄기</button></div>
@@ -124,24 +136,25 @@ canvas#fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
   <div id="say"><div id="who"></div><div id="line"></div><div id="note"></div></div>
   <div id="next">눌러서 계속 ›</div>
   <div class="card" id="start">
-    <div class="k">Yi Peng · Chiang Mai</div>
-    <h1>치앙마이,<br>이펭의 밤</h1>
-    <p>태국 북부의 보름달 밤으로<br>5분만 다녀와요</p>
+    <div class="k"></div>
+    <h1></h1>
+    <p></p>
     <button id="go">떠나기</button>
     <small>🎧 소리를 켜면 더 좋아요</small>
   </div>
   <div class="card" id="end">
-    <div class="k">Tonight in Chiang Mai</div>
-    <h2>오늘 다녀온 이펭</h2>
+    <div class="k"></div>
+    <h2></h2>
     <div class="mem">
-      <div class="t">하늘로 보낸 걱정</div><div class="wish"><canvas id="wishcopy" width="300" height="200"></canvas></div>
+      <div class="wrap-wish"><div class="t" id="memo"></div><div class="wish"><canvas id="wishcopy" width="300" height="200"></canvas></div></div>
       <div class="t">알게 된 것</div>
-      <ul><li>이펭은 옛 란나 왕국 땅, 태국 북부의 보름달 축제</li><li>하늘로 띄우는 종이 등불은 ‘콤 로이’</li><li>걱정과 불운을 실어 보내고, 같은 밤 강에는 끄라통을 띄워요</li></ul>
+      <ul id="learned"></ul>
     </div>
     <div class="dd" id="dday"></div>
-    <div class="btns"><button id="again">처음부터</button><a class="go2" href="./">다른 축제</a></div>
+    <div class="btns"><button id="again">처음부터</button><a class="go2" href="./">다른 축제로</a></div>
   </div>
 </div>
+<script src="js/stories.js"></script>
 <script src="js/visit.js"></script>
 </body>
 </html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0710">
+<meta name="description" content="세계의 축제를 손으로 만지는 곳. 축제마다 그 축제로 만든 작은 세계에서 눌러보고, 쓸어보고, 캡슐로 오늘의 축제를 뽑아요.">
+<meta property="og:title" content="FÊTE">
+<meta property="og:description" content="세계의 축제를 손으로 만지는 곳">
+<meta property="og:image" content="img/yi-peng.jpg">
+<title>FÊTE</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="blur"></div>
+<div class="frame" id="frame">
+  <div class="track" id="track"></div>
+  <div class="gest" id="gest"></div>
+  <div class="ui">
+    <span class="mark">FÊTE</span>
+    <div class="right"><div class="dots" id="dots"></div><button class="gbtn" id="gopen"><i></i>오늘 기분</button></div>
+  </div>
+  <div class="ticks" id="ticks"></div>
+  <div class="hint" id="hint"><div class="ring"></div>눌러보세요<br><span style="opacity:.8;font-size:12px">위로 쓸면 다음 축제</span></div>
+  <div id="lanUI" hidden>
+    <button class="pill" id="motionBtn" hidden>폰 움직임 켜기</button>
+    <button class="pill send" id="sendBtn">등불 보내기 ✉︎</button>
+  </div>
+  <div id="toast" role="status"></div>
+  <button id="lineup" aria-label="오늘의 타임테이블"><i class="pulse"></i><span class="ln"></span><b class="lt"></b></button>
+  <div id="count" aria-live="assertive"></div>
+  <div id="board" hidden><div class="bd"><div class="bh"><div><div class="bk">Timetable</div><div class="bt">매시간 열리는 본 행사</div></div><button id="bclose">닫기 ✕</button></div><div id="brows"></div><p class="bn">같은 시각, 접속한 모두가 같은 장면을 봐요</p></div></div>
+  <div id="cast" aria-live="polite"><span class="cw"></span><span class="ct"></span></div>
+  <div id="sheet" class="sheet" hidden>
+    <div class="sheetbox">
+      <div id="sForm">
+        <div class="st">친구에게 등불 보내기</div>
+        <p class="sp">링크를 열면 하늘에 내 등불이 떠올라요.</p>
+        <label>내 이름<input id="sName" maxlength="10" autocomplete="off"></label>
+        <label>한마디 (비워도 돼요)<input id="sMsg" maxlength="20" placeholder="예: 오늘도 수고했어요" autocomplete="off"></label>
+        <div class="sbtns"><button id="sGo" class="go">링크 만들기</button><button id="sClose">닫기</button></div>
+      </div>
+      <div id="sDone" hidden>
+        <div class="st">등불을 띄웠어요</div>
+        <p class="sp">이 링크를 친구에게 보내세요.</p>
+        <input id="sLink" readonly aria-label="링크">
+        <div class="sbtns"><button id="sShare" class="go">공유하기</button><button id="sCopy">링크 복사</button><button id="sClose2">닫기</button></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<section id="mood" aria-label="오늘의 축제 처방">
+  <canvas id="mcv"></canvas>
+  <button class="gx" id="mclose">닫기 ✕</button>
+  <div class="mhead"><div class="mk">Today's prescription</div><div class="mt">지금 기분대로<br>아무렇게나 그어보세요</div><div class="ms">세게 · 살살 · 동그랗게 · 위로 · 콕콕 · 꾹</div></div>
+  <div id="mres"><div class="mcard"><div class="mimg"></div><div class="min"><div class="mlab">오늘 당신에게 필요한 축제</div><div class="men"></div><div class="mko"></div><div class="mwhere"></div></div></div>
+    <p class="m1"></p><p class="m2"></p><div class="mbtn"><button class="go" id="mgo">들어가기</button><button id="magain">다시 그리기</button></div></div>
+</section>
+<script src="js/data.js"></script>
+<script src="js/core.js"></script>
+<script src="js/scenes.js"></script>
+<script src="js/mood.js"></script>
+<script src="js/lantern.js"></script>
+<script src="js/lineup.js"></script>
+</body>
+</html>
